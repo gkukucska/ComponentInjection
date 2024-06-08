@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <IsRoslynComponent>true</IsRoslynComponent>
+    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>ComponentInjection</PackageId>
+    <PackageVersion>1.0.0</PackageVersion>
+  </PropertyGroup>
+
+</Project>
