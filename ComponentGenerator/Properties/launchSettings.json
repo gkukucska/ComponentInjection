@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SimpleComponent": {
+      "commandName": "DebugRoslynComponent",
+      "targetProject": "..\\SimpleComponent\\SimpleComponent.csproj"
+    }
+  }
+}
