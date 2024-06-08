@@ -1,6 +1,4 @@
-﻿using Microsoft.CodeAnalysis;
-
-namespace ComponentGenerator.ComponentBuilder.Models
+﻿namespace ComponentGenerator.ComponentBuilder.Models
 {
     internal class ComponentModel
     {

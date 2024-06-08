@@ -1,6 +1,4 @@
-﻿using System.Runtime.Serialization;
-
-namespace SimpleComponent
+﻿namespace SimpleComponent
 {
     public partial class MyComponentOptions
     {

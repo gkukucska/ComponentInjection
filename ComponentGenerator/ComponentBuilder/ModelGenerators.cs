@@ -1,5 +1,4 @@
 ﻿using ComponentGenerator.ComponentBuilder.Models;
-using ComponentGenerator.Models;
 using Microsoft.CodeAnalysis;
 using System.Linq;
 using System.Threading;

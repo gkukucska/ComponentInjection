@@ -3,6 +3,10 @@
     "SimpleComponent": {
       "commandName": "DebugRoslynComponent",
       "targetProject": "..\\SimpleComponent\\SimpleComponent.csproj"
+    },
+    "SimpleApplication": {
+      "commandName": "DebugRoslynComponent",
+      "targetProject": "..\\SimpleApplication\\SimpleApplication.csproj"
     }
   }
 }

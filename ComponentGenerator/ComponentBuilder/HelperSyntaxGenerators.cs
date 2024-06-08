@@ -7,7 +7,7 @@ namespace ComponentGenerator.ComponentBuilder
 
         internal static void GenerateAttributes(IncrementalGeneratorPostInitializationContext context)
         {
-            context.AddSource("ComponentAttributes",
+            context.AddSource("ComponentAttributes.g.cs",
 $@"using System;
 
 namespace ComponentGenerator 
