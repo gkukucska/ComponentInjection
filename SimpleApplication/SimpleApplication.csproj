@@ -8,11 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="ComponentInjection" Version="1.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ComponentGenerator\ComponentGenerator.csproj" OutputItemType ="Analyzer"  ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\SimpleComponent\SimpleComponent.csproj" />
   </ItemGroup>
 
