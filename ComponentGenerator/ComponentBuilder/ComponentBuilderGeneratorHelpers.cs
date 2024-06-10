@@ -1,5 +1,6 @@
 ﻿using ComponentGenerator.ComponentBuilder.Models;
 using Microsoft.CodeAnalysis;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -38,7 +39,7 @@ namespace ComponentBuilderExtensions
         {{
             hostBuilder.Services.AddOptions<{model.OptionType}>(key).Bind(hostBuilder.Configuration.GetSection(key))
                                                                     .PostConfigure<IServiceProvider>(PostConfigure{model.ClassName}Options);
-            hostBuilder.Services.AddKeyedSingleton<{model.InterfaceType}, {model.ClassName}>(key, {model.ClassName}Factory);
+            hostBuilder.Services.AddKeyed{GetLifeTimeSyntax(model.Lifetime)}<{model.InterfaceType}, {model.ClassName}>(key, {model.ClassName}Factory);
             return hostBuilder;
         }}
 
@@ -60,6 +61,21 @@ namespace ComponentBuilderExtensions
 }}
 ";
             context.AddSource($"{model.ClassName}BuilderExtensions.g.cs", builderExtensionSyntax);
+        }
+
+        private static string GetLifeTimeSyntax(string lifetime)
+        {
+            switch (lifetime)
+            {
+                case "0":
+                    return "Singleton";
+                case "1":
+                    return "Transient";
+                case "2":
+                    return "Scoped";
+                default:
+                    return string.Empty;
+            }
         }
 
         internal static void GenerateComponentOptionSyntax(SourceProductionContext context, ComponentModel model)
