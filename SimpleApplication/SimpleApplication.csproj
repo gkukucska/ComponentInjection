@@ -10,10 +10,17 @@
   <ItemGroup>
     <PackageReference Include="ComponentInjection" Version="1.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\SimpleComponent\SimpleComponent.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Update=".\*.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

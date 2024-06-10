@@ -24,18 +24,12 @@ namespace SimpleApplication
         internal static IHostApplicationBuilder InstallAliases(this IHostApplicationBuilder builder)
         {{
             var aliases = builder.Configuration.GetRequiredSection(""{model.ComponentSection}"")
-                                                 .AsEnumerable();
-            return builder{GenerateInstallationSyntax(model.ReferencedComponents)};
+                                               .AsEnumerable();
 
-        }}
+            {GenerateInstallationSyntax(model)}
 
-        private static IHostApplicationBuilder InstallAliases<T>(this IHostApplicationBuilder builder,IEnumerable<KeyValuePair<string, string>> aliases)
-        {{
-            foreach (var alias in aliases.Where(x => x.Value.Equals(typeof(T).Name)))
-            {{
-                builder.InstallMyComponent(alias.Key);
-            }}
             return builder;
+
         }}
 
     }}
@@ -44,8 +38,12 @@ namespace SimpleApplication
         context.AddSource("ComponentBuilderExtensions.g.cs", builderExtensionSyntax);
     }
 
-    internal static string GenerateInstallationSyntax(List<string> referencedComponents)
+    internal static string GenerateInstallationSyntax(ApplicationModel model)
     {
-        return string.Join("\n                          ", referencedComponents.Select(x => $@".InstallAliases<{x}>(aliases)"));
+        return string.Join(string.Empty, model.ReferencedComponents.Select(x => x.Split('.').Last()).Select(x => $@"
+            foreach (var alias in aliases.Where(x => x.Value == ""{x}"").Select(x=>x.Key.Replace(""{model.ComponentSection}:"",string.Empty)))
+            {{
+                builder.Install{x}(alias);
+            }}"));
     }
 }

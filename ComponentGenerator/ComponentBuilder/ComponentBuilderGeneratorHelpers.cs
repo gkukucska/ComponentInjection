@@ -36,9 +36,8 @@ namespace ComponentBuilderExtensions
     {{
         public static IHostApplicationBuilder Install{model.ClassName}(this IHostApplicationBuilder hostBuilder, string key)
         {{
-            hostBuilder.Services.AddOptions<{model.OptionType}>().Bind(hostBuilder.Configuration.GetSection(key))
-                                                                 .ValidateOnStart()
-                                                                 .PostConfigure<IServiceProvider>(PostConfigure{model.ClassName}Options);
+            hostBuilder.Services.AddOptions<{model.OptionType}>(key).Bind(hostBuilder.Configuration.GetSection(key))
+                                                                    .PostConfigure<IServiceProvider>(PostConfigure{model.ClassName}Options);
             hostBuilder.Services.AddKeyedSingleton<{model.InterfaceType}, {model.ClassName}>(key, {model.ClassName}Factory);
             return hostBuilder;
         }}
@@ -51,7 +50,7 @@ namespace ComponentBuilderExtensions
         private static {model.ClassName} {model.ClassName}Factory(IServiceProvider provider, object? key)
         {{
             var snapshot = provider.GetRequiredService<IOptionsSnapshot<{model.OptionType}>>();
-            var options = snapshot.Get(key.ToString());
+            var options = snapshot.Get(key?.ToString());
 
             {GenerateConstructorParameterInitializationSyntax(model)}
 

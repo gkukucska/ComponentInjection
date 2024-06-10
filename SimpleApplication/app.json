@@ -1,0 +1,25 @@
+{
+  "Components": {
+    "MyComponentAlias": "MyComponent",
+    "MySecondComponentAlias": "MyComponent",
+    "MyOtherComponentAlias": "MyOtherComponent"
+  },
+  "MyHostedService": {
+    "MyComponent": {
+      "Key": "MyComponentAlias"
+    }
+  },
+  "MyComponentAlias": {
+    "Id": "MyHostedServiceAlias",
+    "OtherComponent": {
+      "Key": "MyOtherComponentAlias"
+    }
+  },
+  "MySecondComponentAlias": {
+    "Id": "MyHostedServiceAlias",
+    "OtherComponent": {
+      "Key": "MyOtherComponentAlias"
+    }
+
+  }
+}

@@ -11,4 +11,9 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
   </ItemGroup>
 
+
+  <Target Condition=" '$(Configuration)' == 'Debug' " Name="CleanCacheBeforeRestore" BeforeTargets="Restore">
+    <Exec Command="dotnet nuget locals all --clear" />
+  </Target>
+
 </Project>
