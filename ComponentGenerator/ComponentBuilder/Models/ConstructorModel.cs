@@ -1,13 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using ComponentGenerator.ComponentBuilder.Models.Parameters;
+using System.Collections.Generic;
 
 namespace ComponentGenerator.ComponentBuilder.Models
 {
     internal class ConstructorModel
     {
-        public ConstructorModel()
-        {
-        }
 
-        public List<ParameterModel> Parameters { get; internal set; } = new List<ParameterModel>();
+        public IReadOnlyCollection<ParameterModelBase> Parameters { get;}
+
+        public ConstructorModel(IReadOnlyCollection<ParameterModelBase> parameters)
+        {
+            Parameters = parameters;
+        }
     }
 }
