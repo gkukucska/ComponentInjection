@@ -7,7 +7,7 @@ namespace ComponentGenerator.ComponentBuilder.Models.Injectables
     {
         public string OptionType { get; }
 
-        public ComponentModel(string nameSpace, string className, ConstructorModel constructor, List<string> implementationCollection, string lifetime, string optionType) : base(nameSpace, className, constructor, implementationCollection, lifetime)
+        public ComponentModel(string className, ConstructorModel constructor, List<string> implementationCollection, string lifetime, string optionType) : base(className, constructor, implementationCollection, lifetime)
         {
             OptionType = optionType;
         }

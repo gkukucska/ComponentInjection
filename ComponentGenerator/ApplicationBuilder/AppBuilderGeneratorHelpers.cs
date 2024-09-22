@@ -1,7 +1,8 @@
-﻿using ComponentGenerator.ApplicationBuilder.Model;
+﻿using ComponentGenerator;
+using ComponentGenerator.ApplicationBuilder.Model;
 using Microsoft.CodeAnalysis;
-using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 internal static class AppBuilderGeneratorHelpers
 {
@@ -13,20 +14,27 @@ internal static class AppBuilderGeneratorHelpers
             return;
         }
         var builderExtensionSyntax = $@"//compiler generated
+#nullable disable
+using System.CodeDom.Compiler;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using ComponentBuilderExtensions;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 
-namespace SimpleApplication
+namespace {model.ApplicationNamespace}
 {{
     internal static class BuilderExtensions
     {{
+        [CompilerGenerated]
+        [ExcludeFromCodeCoverage]
+        [GeneratedCode(""{Assembly.GetExecutingAssembly().GetName().Name}"", ""{Assembly.GetExecutingAssembly().GetName().Version}"")]
         internal static IHostApplicationBuilder InstallAliases(this IHostApplicationBuilder builder)
         {{
             var aliases = builder.Configuration.GetRequiredSection(""{model.ComponentSection}"")
                                                .AsEnumerable();
 
-            {GenerateInstallationSyntax(model)}
+{GenerateInstallationSyntax(model)}
 
             return builder;
 
@@ -40,10 +48,10 @@ namespace SimpleApplication
 
     internal static string GenerateInstallationSyntax(ApplicationModel model)
     {
-        return string.Join(string.Empty, model.ReferencedComponents.Select(x => x.Split('.').Last()).Select(x => $@"
+        return string.Join(string.Empty, model.ReferencedComponents.Select(x => $@"
             foreach (var alias in aliases.Where(x => x.Value == ""{x}"").Select(x=>x.Key.Replace(""{model.ComponentSection}:"",string.Empty)))
             {{
-                builder.Install{x}(alias);
+                builder.Install{Helpers.ToSnakeCase(x)}(alias);
             }}"));
     }
 }

@@ -7,7 +7,7 @@ namespace ComponentGenerator.ComponentBuilder.Models.Injectables
 
         public string ServiceKey { get; }
 
-        public KeyedServiceModel(string nameSpace, string className, ConstructorModel constructor, List<string> implementationCollection, string lifetime, string serviceKey) : base(nameSpace, className, constructor, implementationCollection, lifetime)
+        public KeyedServiceModel(string className, ConstructorModel constructor, List<string> implementationCollection, string lifetime, string serviceKey) : base(className, constructor, implementationCollection, lifetime)
         {
             ServiceKey = serviceKey;
         }

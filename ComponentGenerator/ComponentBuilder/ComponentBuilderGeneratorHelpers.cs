@@ -1,8 +1,10 @@
-﻿using ComponentGenerator.ComponentBuilder.Models;
+﻿using ComponentGenerator.ComponentBuilder.Models.Injectables;
+using ComponentGenerator.ComponentBuilder.Models.Parameters;
 using Microsoft.CodeAnalysis;
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Text;
 
 namespace ComponentGenerator.ComponentBuilder
 {
@@ -10,57 +12,69 @@ namespace ComponentGenerator.ComponentBuilder
     internal static class ComponentBuilderGeneratorHelpers
     {
 
-        internal static string GenerateAliasResolvingSyntax(ComponentModel model)
-        {
-            var resolvingSyntaxCollection = model.Constructor.Parameters.Where(x => x.IsAlias && x.Type != model.OptionType).Select(x => $@"
-            options.{Helpers.CapitalizeFirstLetter(x.Name)}.Value = provider.GetRequiredKeyedService<{x.Type}>(options.{Helpers.CapitalizeFirstLetter(x.Name)}.Key);");
-            return string.Join("\n", resolvingSyntaxCollection);
-        }
-
         internal static void GenerateComponentBuilderSyntax(SourceProductionContext context, ComponentModel model)
         {
-            if (model is null)
-            {
-                return;
-            }
 
             var builderExtensionSyntax = $@"//compiler generated
-using Microsoft.Extensions.DependencyInjection;
+#nullable disable
+using System.CodeDom.Compiler;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using {model.Namespace};
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ComponentBuilderExtensions
 {{
     public static partial class BuilderExtensions
     {{
-        public static IHostApplicationBuilder Install{model.ClassName}(this IHostApplicationBuilder hostBuilder, string key)
+        [CompilerGenerated]
+        [ExcludeFromCodeCoverage]
+        [GeneratedCode(""{Assembly.GetExecutingAssembly().GetName().Name}"", ""{Assembly.GetExecutingAssembly().GetName().Version}"")]
+        public static IHostApplicationBuilder Install{Helpers.ToSnakeCase(model.ClassName)}(this IHostApplicationBuilder builder, string key)
         {{
-            hostBuilder.Services.AddOptions<{model.OptionType}>(key).Bind(hostBuilder.Configuration.GetSection(key))
-                                                                    .PostConfigure<IServiceProvider>(PostConfigure{model.ClassName}Options);
-            hostBuilder.Services.AddKeyed{GetLifeTimeSyntax(model.Lifetime)}<{model.InterfaceType}, {model.ClassName}>(key, {model.ClassName}Factory);
-            return hostBuilder;
-        }}
+            builder.Services.AddOptions<{model.OptionType}>(key).Bind(builder.Configuration.GetSection(key));
+            builder.Services.AddKeyed{GetLifeTimeSyntax(model.Lifetime)}<{model.ClassName}, {model.ClassName}>(key, {Helpers.ToSnakeCase(model.ClassName)}Factory);
+            {GenerateProxyFactoryRegistrationSyntax(model)}
+            return builder;
+            }}
 
-        private static void PostConfigure{model.ClassName}Options({model.OptionType} options, IServiceProvider provider)
-        {{
-            {GenerateAliasResolvingSyntax(model)}
-        }}
-
-        private static {model.ClassName} {model.ClassName}Factory(IServiceProvider provider, object? key)
+        [CompilerGenerated]
+        [ExcludeFromCodeCoverage]
+        [GeneratedCode(""{Assembly.GetExecutingAssembly().GetName().Name}"", ""{Assembly.GetExecutingAssembly().GetName().Version}"")]
+        private static {model.ClassName} {Helpers.ToSnakeCase(model.ClassName)}Factory(IServiceProvider provider, object? key)
         {{
             var snapshot = provider.GetRequiredService<IOptionsSnapshot<{model.OptionType}>>();
             var options = snapshot.Get(key?.ToString());
 
-            {GenerateConstructorParameterInitializationSyntax(model)}
+{GenerateConstructorParameterInitializationSyntax(model)}
 
             return new {model.ClassName}({GenerateConstructorSyntax(model)});
         }}
+
+
+        [CompilerGenerated]
+        [ExcludeFromCodeCoverage]
+        [GeneratedCode(""{Assembly.GetExecutingAssembly().GetName().Name}"", ""{Assembly.GetExecutingAssembly().GetName().Version}"")]
+        private static {model.ClassName} {Helpers.ToSnakeCase(model.ClassName)}ProxyFactory(IServiceProvider provider, object? key)
+        {{
+            return provider.GetRequiredKeyedService<{model.ClassName}>(key);
+        }}
     }}
 }}
-";
-            context.AddSource($"{model.ClassName}BuilderExtensions.g.cs", builderExtensionSyntax);
+            ";
+            context.AddSource($"{Helpers.ToSnakeCase(model.ClassName)}_BuilderExtensions.g.cs", builderExtensionSyntax);
+        }
+
+        private static string GenerateProxyFactoryRegistrationSyntax(ComponentModel model)
+        {
+            var builder = new StringBuilder();
+            foreach (var implementation in model.ImplementationCollection)
+            {
+                builder.AppendLine($@"builder.Services.AddKeyed{GetLifeTimeSyntax(model.Lifetime)}<{implementation}, {model.ClassName}>(key, {Helpers.ToSnakeCase(model.ClassName)}ProxyFactory);");
+            }
+            return builder.ToString();
         }
 
         private static string GetLifeTimeSyntax(string lifetime)
@@ -78,54 +92,32 @@ namespace ComponentBuilderExtensions
             }
         }
 
-        internal static void GenerateComponentOptionSyntax(SourceProductionContext context, ComponentModel model)
-        {
-            if (model?.Constructor.Parameters.All(x => !x.IsAlias) ?? true)
-            {
-                return;
-            }
-
-
-            var optionClassName = model.OptionType.Split('.').Last();
-            var optionNamespace = string.Join(".", model.OptionType.Split('.').Take(model.OptionType.Split('.').Count() - 1));
-
-            var optionSyntax = $@"//compiler generated
-using System.Runtime.Serialization;
-
-namespace {optionNamespace}
-{{
-    public partial class {optionClassName}
-    {{
-        {GenerateAliasProperties(model)}
-    }}
-
-    public class Alias<T>
-    {{
-        [DataMember]
-        public string Key {{ get; set; }}
-
-        [IgnoreDataMember]
-        public T Value {{ get; set; }}
-    }}
-}}
-";
-
-            context.AddSource($"{optionClassName}.g.cs", optionSyntax);
-        }
-
-        private static string GenerateAliasProperties(ComponentModel model)
-        {
-            var aliasProperties = model.Constructor.Parameters.Where(x => x.IsAlias).Select(x =>
-$@"        public Alias<{x.Type}> {Helpers.CapitalizeFirstLetter(x.Name)} {{ get; set; }}");
-
-            return string.Join("\n", aliasProperties);
-        }
-
         internal static string GenerateConstructorParameterInitializationSyntax(ComponentModel model)
         {
-            var resolvingSyntaxCollection = model.Constructor.Parameters.Where(x => !x.IsAlias && x.Type != model.OptionType).Select(x => $@"
-            var {x.Name} = provider.GetRequiredService<{x.Type}>();");
-            return string.Join("\n", resolvingSyntaxCollection);
+            var builder = new StringBuilder();
+            foreach (var parameter in model.Constructor.Parameters)
+            {
+                if (parameter is AliasParameterModel aliasParameterModel)
+                {
+                    builder.AppendLine($@"            var {aliasParameterModel.Name} = provider.GetRequiredKeyedService<{aliasParameterModel.Type}>(options.{Helpers.CapitalizeFirstLetter(aliasParameterModel.Name)});");
+                    continue;
+                }
+                if (parameter is KeyedServiceParameterModel keyedParameterModel)
+                {
+                    builder.AppendLine($@"            var {keyedParameterModel.Name} = provider.GetRequiredKeyedService<{keyedParameterModel.Type}>({keyedParameterModel.ServiceKey});");
+                    continue;
+                }
+                if (parameter.Type == model.OptionType)
+                {
+                    continue;
+                }
+                if (parameter is ServiceParameterModel serviceParameterModel)
+                {
+                    builder.AppendLine($@"            var {serviceParameterModel.Name} = provider.GetRequiredService<{serviceParameterModel.Type}>();");
+                    continue;
+                }
+            }
+            return builder.ToString();
         }
 
         internal static string GenerateConstructorSyntax(ComponentModel model)
@@ -133,10 +125,14 @@ $@"        public Alias<{x.Type}> {Helpers.CapitalizeFirstLetter(x.Name)} {{ get
             var parameterSyntaxCollection = new List<string>();
             foreach (var parameter in model.Constructor.Parameters)
             {
-                if (parameter.IsAlias)
+                if (parameter is AliasParameterModel)
                 {
-                    parameterSyntaxCollection.Add($"options.{Helpers.CapitalizeFirstLetter(parameter.Name)}.Value");
+                    parameterSyntaxCollection.Add(parameter.Name);
                     continue;
+                }
+                if (parameter is ServiceKeyParameterModel)
+                {
+                    parameterSyntaxCollection.Add("key");
                 }
                 if (parameter.Type == model.OptionType)
                 {
@@ -146,6 +142,45 @@ $@"        public Alias<{x.Type}> {Helpers.CapitalizeFirstLetter(x.Name)} {{ get
                 parameterSyntaxCollection.Add(parameter.Name);
             }
             return string.Join(", ", parameterSyntaxCollection);
+        }
+
+        internal static void GenerateComponentOptionSyntax(SourceProductionContext context, ComponentModel model)
+        {
+            if (!model.Constructor.Parameters.OfType<AliasParameterModel>().Any())
+            {
+                return;
+            }
+
+
+            var optionClassName = model.OptionType.Split('.').Last();
+            var optionNamespace = string.Join(".", model.OptionType.Split('.').Take(model.OptionType.Split('.').Count() - 1));
+            var optionSyntax = $@"//compiler generated
+using System.CodeDom.Compiler;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
+
+namespace {optionNamespace}
+{{
+
+    [CompilerGenerated]
+    [ExcludeFromCodeCoverage]
+    [GeneratedCode(""{Assembly.GetExecutingAssembly().GetName().Name}"", ""{Assembly.GetExecutingAssembly().GetName().Version}"")]
+    partial class {optionClassName}
+    {{
+        {GenerateAliasProperties(model)}
+    }}
+}}
+";
+
+            context.AddSource($"{optionClassName}.g.cs", optionSyntax);
+        }
+
+        private static string GenerateAliasProperties(ComponentModel model)
+        {
+            var aliasProperties = model.Constructor.Parameters.OfType<AliasParameterModel>().Select(x =>
+$@"        public string {Helpers.CapitalizeFirstLetter(x.Name)} {{ get; set; }}");
+
+            return string.Join("\n", aliasProperties);
         }
     }
 }

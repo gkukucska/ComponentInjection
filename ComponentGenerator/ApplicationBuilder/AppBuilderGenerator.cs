@@ -15,8 +15,9 @@ namespace ComponentGenerator.ApplicationBuilder
         {
             context.RegisterPostInitializationOutput(HelpersSyntaxGenerator.GenerateAttributes);
 
-            var provider = context.SyntaxProvider.CreateSyntaxProvider(predicate: (node, cts) => node is ClassDeclarationSyntax,
-                                                                       transform: ModelGenrators.GenerateModel);
+            var provider = context.SyntaxProvider.ForAttributeWithMetadataName("ComponentGenerator.ApplicationAttribute",
+                                                                                predicate: (node, cts) => node is ClassDeclarationSyntax,
+                                                                                transform: ModelGenrators.GenerateModel);
             context.RegisterSourceOutput(provider, AppBuilderGeneratorHelpers.GenerateApplicationBuilderSyntax);
         }
     }

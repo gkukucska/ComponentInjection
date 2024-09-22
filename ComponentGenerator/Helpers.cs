@@ -14,5 +14,9 @@
             // return the array made of the new char array
             return new string(letters);
         }
+        public static string ToSnakeCase(string source)
+        {
+            return source.Replace('.', '_');
+        }
     }
 }

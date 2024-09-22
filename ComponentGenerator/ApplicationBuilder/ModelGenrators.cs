@@ -9,16 +9,14 @@ namespace ComponentGenerator.ApplicationBuilder
     internal static class ModelGenrators
     {
 
-        internal static ApplicationModel GenerateModel(GeneratorSyntaxContext context, CancellationToken token)
+        internal static ApplicationModel GenerateModel(GeneratorAttributeSyntaxContext context, CancellationToken token)
         {
-            var applicationSymbol = context.SemanticModel.Compilation.GetTypeByMetadataName("ComponentGenerator.ApplicationAttribute");
-            var classSymbol = context.SemanticModel.GetDeclaredSymbol(context.Node, token) as INamedTypeSymbol;
-            var applicationAttributeSymbol = classSymbol.GetAttributes().FirstOrDefault(x => x.AttributeClass.Equals(applicationSymbol, SymbolEqualityComparer.Default));
-            if (applicationAttributeSymbol is null)
+            if (!(context.TargetSymbol is INamedTypeSymbol classSymbol))
             {
                 return null;
             }
-            var componentSection = applicationAttributeSymbol.ConstructorArguments[0].Value.ToString();
+            var applicationNamespace = classSymbol.ContainingNamespace;
+            var componentSection = context.Attributes.First().ConstructorArguments[0].Value.ToString();
             var types = context.SemanticModel.Compilation.SourceModule.ReferencedAssemblySymbols.SelectMany(a =>
             {
                 try
@@ -43,10 +41,11 @@ namespace ComponentGenerator.ApplicationBuilder
 
             var componentSymbol = context.SemanticModel.Compilation.GetTypeByMetadataName("ComponentGenerator.ComponentAttribute");
 
-            var components = types.Where(x => x.GetAttributes().Any(a => a.AttributeClass.Name.Equals(componentSymbol.Name))).OfType<INamedTypeSymbol>().Select(x => x.ContainingNamespace.ToString() + "." + x.Name).ToList();
+            var components = types.Where(x => x.GetAttributes().Any(a => a.AttributeClass.Name.Equals(componentSymbol.Name))).OfType<INamedTypeSymbol>().Select(x => x.ToString()).ToList();
 
             return new ApplicationModel
             {
+                ApplicationNamespace = applicationNamespace,
                 ComponentSection = componentSection,
                 ReferencedComponents = components
             };

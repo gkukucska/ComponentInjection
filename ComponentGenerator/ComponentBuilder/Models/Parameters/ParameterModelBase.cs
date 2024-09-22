@@ -1,6 +1,6 @@
 ﻿namespace ComponentGenerator.ComponentBuilder.Models.Parameters
 {
-    internal class ParameterModelBase
+    internal abstract class ParameterModelBase
     {
         public string Name { get; }
 
