@@ -1,6 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 
-namespace ComponentGenerator.ComponentBuilder
+namespace ComponentGenerator.KeylessComponentBuilder
 {
     internal static class HelperSyntaxGenerators
     {
@@ -14,25 +14,19 @@ using Microsoft.Extensions.DependencyInjection;
 namespace ComponentGenerator 
 {{
     [AttributeUsage(AttributeTargets.Class,AllowMultiple = false,Inherited = true)]
-    internal class ComponentAttribute: Attribute 
+    internal class KeylessComponentAttribute: Attribute 
     {{
         private readonly Type _optionType;
         private readonly ServiceLifetime _lifetime;
         private readonly Type[] _implementationTypeCollection;
 
-        public ComponentAttribute(Type optionType, ServiceLifetime lifetime, params Type[] implementationTypeCollection)
+        public KeylessComponentAttribute(Type optionType, ServiceLifetime lifetime, params Type[] implementationTypeCollection)
         {{
             _implementationTypeCollection = implementationTypeCollection;
             _optionType = optionType;
             _lifetime = lifetime;
         }}
     }}
-    
-    [AttributeUsage(AttributeTargets.Parameter,AllowMultiple = false,Inherited = true)]
-    internal class AliasAttribute: Attribute
-    {{
-    }}
-
 }}");
         }
     }
