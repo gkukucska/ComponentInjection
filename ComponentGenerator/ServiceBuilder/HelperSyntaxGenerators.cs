@@ -18,7 +18,7 @@ namespace ComponentGenerator
         private readonly ServiceLifetime _lifetime;
         private readonly Type[] _implementationTypeCollection;
 
-        public ComponentAttribute(ServiceLifetime lifetime, params Type[] implementationTypeCollection)
+        public ServiceAttribute(ServiceLifetime lifetime, params Type[] implementationTypeCollection)
         {{
             _implementationTypeCollection = implementationTypeCollection;
             _lifetime = lifetime;
