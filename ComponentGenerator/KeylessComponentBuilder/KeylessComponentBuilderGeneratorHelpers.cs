@@ -6,13 +6,13 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace ComponentGenerator.ComponentBuilder
+namespace ComponentGenerator.KeylessComponentBuilder
 {
 
-    internal static class ComponentBuilderGeneratorHelpers
+    internal static class KeylessComponentBuilderGeneratorHelpers
     {
 
-        internal static void GenerateComponentBuilderSyntax(SourceProductionContext context, ComponentModel model)
+        internal static void GenerateKeylessComponentBuilderSyntax(SourceProductionContext context, KeylessComponentModel model)
         {
             if (model is null)
             {
@@ -36,10 +36,10 @@ namespace ComponentBuilderExtensions
         [CompilerGenerated]
         [ExcludeFromCodeCoverage]
         [GeneratedCode(""{Assembly.GetExecutingAssembly().GetName().Name}"", ""{Assembly.GetExecutingAssembly().GetName().Version}"")]
-        public static IHostApplicationBuilder InstallAsComponent_{Helpers.ToSnakeCase(model.ClassName)}(this IHostApplicationBuilder builder, string key)
+        public static IHostApplicationBuilder InstallAsKeylessComponent_{Helpers.ToSnakeCase(model.ClassName)}(this IHostApplicationBuilder builder)
         {{
-            builder.Services.AddOptions<{model.OptionType}>(key).Bind(builder.Configuration.GetSection(key));
-            builder.Services.AddKeyed{GetLifeTimeSyntax(model.Lifetime)}<{model.ClassName}, {model.ClassName}>(key, {Helpers.ToSnakeCase(model.ClassName)}Factory);
+            builder.Services.AddOptions<{model.OptionType}>(""{Helpers.ToSnakeCase(model.ClassName)}"").Bind(builder.Configuration.GetSection(""{Helpers.ToSnakeCase(model.ClassName)}""));
+            builder.Services.AddKeyed{GetLifeTimeSyntax(model.Lifetime)}<{model.ClassName}, {model.ClassName}>(""{Helpers.ToSnakeCase(model.ClassName)}"", {Helpers.ToSnakeCase(model.ClassName)}Factory);
             {GenerateProxyFactoryRegistrationSyntax(model)}
             return builder;
         }}
@@ -47,7 +47,7 @@ namespace ComponentBuilderExtensions
         [CompilerGenerated]
         [ExcludeFromCodeCoverage]
         [GeneratedCode(""{Assembly.GetExecutingAssembly().GetName().Name}"", ""{Assembly.GetExecutingAssembly().GetName().Version}"")]
-        private static {model.ClassName} {Helpers.ToSnakeCase(model.ClassName)}Factory(IServiceProvider provider, object? key)
+        private static {model.ClassName} {Helpers.ToSnakeCase(model.ClassName)}Factory(IServiceProvider provider, object key)
         {{
             var snapshot = provider.GetRequiredService<IOptionsSnapshot<{model.OptionType}>>();
             var options = snapshot.Get(key?.ToString());
@@ -61,9 +61,9 @@ namespace ComponentBuilderExtensions
         [CompilerGenerated]
         [ExcludeFromCodeCoverage]
         [GeneratedCode(""{Assembly.GetExecutingAssembly().GetName().Name}"", ""{Assembly.GetExecutingAssembly().GetName().Version}"")]
-        private static {model.ClassName} {Helpers.ToSnakeCase(model.ClassName)}ProxyFactory(IServiceProvider provider, object? key)
+        private static {model.ClassName} {Helpers.ToSnakeCase(model.ClassName)}ProxyFactory(IServiceProvider provider)
         {{
-            return provider.GetRequiredKeyedService<{model.ClassName}>(key);
+            return provider.GetRequiredKeyedService<{model.ClassName}>(""{Helpers.ToSnakeCase(model.ClassName)}"");
         }}
     }}
 }}
@@ -76,7 +76,7 @@ namespace ComponentBuilderExtensions
             var builder = new StringBuilder();
             foreach (var implementation in model.ImplementationCollection)
             {
-                builder.AppendLine($@"builder.Services.AddKeyed{GetLifeTimeSyntax(model.Lifetime)}<{implementation}, {model.ClassName}>(key, {Helpers.ToSnakeCase(model.ClassName)}ProxyFactory);");
+                builder.AppendLine($@"builder.Services.Add{GetLifeTimeSyntax(model.Lifetime)}<{implementation}, {model.ClassName}>({Helpers.ToSnakeCase(model.ClassName)}ProxyFactory);");
             }
             return builder.ToString();
         }
@@ -136,7 +136,7 @@ namespace ComponentBuilderExtensions
                 }
                 if (parameter is ServiceKeyParameterModel)
                 {
-                    parameterSyntaxCollection.Add("key");
+                    parameterSyntaxCollection.Add(Helpers.ToSnakeCase(model.ClassName));
                 }
                 if (parameter.Type == model.OptionType)
                 {
@@ -148,7 +148,7 @@ namespace ComponentBuilderExtensions
             return string.Join(", ", parameterSyntaxCollection);
         }
 
-        internal static void GenerateComponentOptionSyntax(SourceProductionContext context, ComponentModel model)
+        internal static void GenerateKeylessComponentOptionSyntax(SourceProductionContext context, ComponentModel model)
         {
             if (!model.Constructor.Parameters.OfType<AliasParameterModel>().Any())
             {

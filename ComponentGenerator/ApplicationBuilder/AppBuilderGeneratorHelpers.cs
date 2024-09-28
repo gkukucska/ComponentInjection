@@ -35,9 +35,10 @@ namespace {model.ApplicationNamespace}
             var aliases = builder.Configuration.GetRequiredSection(""{model.ComponentSection}"")
                                                .AsEnumerable();
 
-{GenerateComponentInstallationSyntax(model)}
 {GenerateServiceInstallationSyntax(model)}
 {GenerateKeyedServiceInstallationSyntax(model)}
+{GenerateComponentInstallationSyntax(model)}
+{GenerateKeylessComponentInstallationSyntax(model)}
 
             return builder;
 
@@ -68,5 +69,11 @@ namespace {model.ApplicationNamespace}
             {{
                 builder.InstallAsComponent_{Helpers.ToSnakeCase(x)}(alias);
             }}"));
+    }
+
+    internal static string GenerateKeylessComponentInstallationSyntax(ApplicationModel model)
+    {
+        return string.Join(string.Empty, model.ReferencedKeylessComponents.Select(x => $@"
+            builder.InstallAsKeylessComponent_{Helpers.ToSnakeCase(x)}();"));
     }
 }

@@ -48,7 +48,10 @@ namespace ComponentGenerator.ApplicationBuilder
             var componentSymbol = context.SemanticModel.Compilation.GetTypeByMetadataName("ComponentGenerator.ComponentAttribute");
             var components = types.Where(x => x.GetAttributes().Any(a => a.AttributeClass.Name.Equals(componentSymbol.Name))).OfType<INamedTypeSymbol>().Select(x => x.ToString()).ToList();
 
-            return new ApplicationModel(componentSection, services, keyedServices, components, applicationNamespace);
+            var keylessComponentSymbol = context.SemanticModel.Compilation.GetTypeByMetadataName("ComponentGenerator.KeylessComponentAttribute");
+            var keylessComponents = types.Where(x => x.GetAttributes().Any(a => a.AttributeClass.Name.Equals(keylessComponentSymbol.Name))).OfType<INamedTypeSymbol>().Select(x => x.ToString()).ToList();
+
+            return new ApplicationModel(componentSection, services, keyedServices, components, keylessComponents, applicationNamespace);
         }
 
         private static IEnumerable<ITypeSymbol> GetAllTypes(INamespaceSymbol root)
