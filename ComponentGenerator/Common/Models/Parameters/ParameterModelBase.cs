@@ -6,10 +6,13 @@
 
         public string Type { get; }
 
-        public ParameterModelBase(string name, string type)
+        public bool IsOptional { get; }
+
+        public ParameterModelBase(string name, string type,bool isOptional)
         {
             Name = name;
             Type = type;
+            IsOptional = isOptional;
         }
     }
 }

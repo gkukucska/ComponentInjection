@@ -2,7 +2,7 @@
 {
     internal class ServiceParameterModel : ParameterModelBase
     {
-        public ServiceParameterModel(string name, string type) : base(name, type)
+        public ServiceParameterModel(string name, string type, bool isOptional) : base(name, type, isOptional)
         {
         }
     }

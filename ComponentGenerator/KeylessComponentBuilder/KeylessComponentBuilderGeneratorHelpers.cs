@@ -39,7 +39,7 @@ namespace ComponentBuilderExtensions
         public static IHostApplicationBuilder InstallAsKeylessComponent_{Helpers.ToSnakeCase(model.ClassName)}(this IHostApplicationBuilder builder)
         {{
             builder.Services.AddOptions<{model.OptionType}>(""{Helpers.ToSnakeCase(model.ClassName)}"").Bind(builder.Configuration.GetSection(""{Helpers.ToSnakeCase(model.ClassName)}""));
-            builder.Services.AddKeyed{GetLifeTimeSyntax(model.Lifetime)}<{model.ClassName}, {model.ClassName}>(""{Helpers.ToSnakeCase(model.ClassName)}"", {Helpers.ToSnakeCase(model.ClassName)}Factory);
+            builder.Services.AddKeyed{Helpers.GetLifeTimeSyntax(model.Lifetime)}<{model.ClassName}, {model.ClassName}>(""{Helpers.ToSnakeCase(model.ClassName)}"", {Helpers.ToSnakeCase(model.ClassName)}Factory);
             {GenerateProxyFactoryRegistrationSyntax(model)}
             return builder;
         }}
@@ -52,7 +52,7 @@ namespace ComponentBuilderExtensions
             var snapshot = provider.GetRequiredService<IOptionsSnapshot<{model.OptionType}>>();
             var options = snapshot.Get(key?.ToString());
 
-{GenerateConstructorParameterInitializationSyntax(model)}
+{ComponentBuilder.ComponentBuilderGeneratorHelpers.GenerateConstructorParameterInitializationSyntax(model)}
 
             return new {model.ClassName}({GenerateConstructorSyntax(model)});
         }}
@@ -76,50 +76,7 @@ namespace ComponentBuilderExtensions
             var builder = new StringBuilder();
             foreach (var implementation in model.ImplementationCollection)
             {
-                builder.AppendLine($@"builder.Services.Add{GetLifeTimeSyntax(model.Lifetime)}<{implementation}, {model.ClassName}>({Helpers.ToSnakeCase(model.ClassName)}ProxyFactory);");
-            }
-            return builder.ToString();
-        }
-
-        private static string GetLifeTimeSyntax(string lifetime)
-        {
-            switch (lifetime)
-            {
-                case "0":
-                    return "Singleton";
-                case "1":
-                    return "Transient";
-                case "2":
-                    return "Scoped";
-                default:
-                    return string.Empty;
-            }
-        }
-
-        internal static string GenerateConstructorParameterInitializationSyntax(ComponentModel model)
-        {
-            var builder = new StringBuilder();
-            foreach (var parameter in model.Constructor.Parameters)
-            {
-                if (parameter is AliasParameterModel aliasParameterModel)
-                {
-                    builder.AppendLine($@"            var {aliasParameterModel.Name} = provider.GetRequiredKeyedService<{aliasParameterModel.Type}>(options.{Helpers.CapitalizeFirstLetter(aliasParameterModel.Name)});");
-                    continue;
-                }
-                if (parameter is KeyedServiceParameterModel keyedParameterModel)
-                {
-                    builder.AppendLine($@"            var {keyedParameterModel.Name} = provider.GetRequiredKeyedService<{keyedParameterModel.Type}>({keyedParameterModel.ServiceKey});");
-                    continue;
-                }
-                if (parameter.Type == model.OptionType)
-                {
-                    continue;
-                }
-                if (parameter is ServiceParameterModel serviceParameterModel)
-                {
-                    builder.AppendLine($@"            var {serviceParameterModel.Name} = provider.GetRequiredService<{serviceParameterModel.Type}>();");
-                    continue;
-                }
+                builder.AppendLine($@"builder.Services.Add{Helpers.GetLifeTimeSyntax(model.Lifetime)}<{implementation}, {model.ClassName}>({Helpers.ToSnakeCase(model.ClassName)}ProxyFactory);");
             }
             return builder.ToString();
         }
