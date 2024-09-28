@@ -31,7 +31,7 @@ namespace ComponentBuilderExtensions
         [CompilerGenerated]
         [ExcludeFromCodeCoverage]
         [GeneratedCode(""{Assembly.GetExecutingAssembly().GetName().Name}"", ""{Assembly.GetExecutingAssembly().GetName().Version}"")]
-        public static IHostApplicationBuilder Install{Helpers.ToSnakeCase(model.ClassName)}(this IHostApplicationBuilder builder)
+        public static IHostApplicationBuilder InstallAsKeyedService_{Helpers.ToSnakeCase(model.ClassName)}(this IHostApplicationBuilder builder)
         {{
             builder.Services.AddKeyed{GetLifeTimeSyntax(model.Lifetime)}<{model.ClassName}, {model.ClassName}>(""{model.ServiceKey}"");
 {GenerateProxyFactoryRegistrationSyntax(model)}

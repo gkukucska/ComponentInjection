@@ -43,7 +43,7 @@ namespace ComponentGenerator.ApplicationBuilder
             var services = types.Where(x => x.GetAttributes().Any(a => a.AttributeClass.Name.Equals(serviceSymbol.Name))).OfType<INamedTypeSymbol>().Select(x => x.ToString()).ToList();
 
             var keyedServiceSymbol = context.SemanticModel.Compilation.GetTypeByMetadataName("ComponentGenerator.KeyedServiceAttribute");
-            var keyedServices = types.Where(x => x.GetAttributes().Any(a => a.AttributeClass.Name.Equals(serviceSymbol.Name))).OfType<INamedTypeSymbol>().Select(x => x.ToString()).ToList();
+            var keyedServices = types.Where(x => x.GetAttributes().Any(a => a.AttributeClass.Name.Equals(keyedServiceSymbol.Name))).OfType<INamedTypeSymbol>().Select(x => x.ToString()).ToList();
 
             var componentSymbol = context.SemanticModel.Compilation.GetTypeByMetadataName("ComponentGenerator.ComponentAttribute");
             var components = types.Where(x => x.GetAttributes().Any(a => a.AttributeClass.Name.Equals(componentSymbol.Name))).OfType<INamedTypeSymbol>().Select(x => x.ToString()).ToList();
