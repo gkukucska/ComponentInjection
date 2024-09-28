@@ -1,4 +1,4 @@
-﻿using ComponentGenerator.ApplicationBuilder.Model;
+﻿using ComponentGenerator.ApplicationBuilder.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;

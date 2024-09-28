@@ -1,7 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using System.Collections.Generic;
 
-namespace ComponentGenerator.ApplicationBuilder.Model
+namespace ComponentGenerator.ApplicationBuilder.Models
 {
     internal class ApplicationModel
     {
