@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleComponent", "SimpleCo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleApplication", "SimpleApplication\SimpleApplication.csproj", "{A537275A-2A87-4644-BEAC-E0F4B3A8ED25}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleService", "SimpleService\SimpleService.csproj", "{0118B76F-C551-4BC1-AAC7-B2FC0AD3D95D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,10 @@ Global
 		{A537275A-2A87-4644-BEAC-E0F4B3A8ED25}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A537275A-2A87-4644-BEAC-E0F4B3A8ED25}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A537275A-2A87-4644-BEAC-E0F4B3A8ED25}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0118B76F-C551-4BC1-AAC7-B2FC0AD3D95D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0118B76F-C551-4BC1-AAC7-B2FC0AD3D95D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0118B76F-C551-4BC1-AAC7-B2FC0AD3D95D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0118B76F-C551-4BC1-AAC7-B2FC0AD3D95D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -42,6 +48,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{7BD27DB0-4F85-47AE-960C-92955E343BF5} = {83DA7C3C-55D8-40C0-B10A-2218BDCBFE44}
 		{A537275A-2A87-4644-BEAC-E0F4B3A8ED25} = {83DA7C3C-55D8-40C0-B10A-2218BDCBFE44}
+		{0118B76F-C551-4BC1-AAC7-B2FC0AD3D95D} = {83DA7C3C-55D8-40C0-B10A-2218BDCBFE44}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3FC8787A-BBA2-4784-9559-C5EC9374A243}

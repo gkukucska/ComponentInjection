@@ -1,9 +1,10 @@
 ﻿using ComponentGenerator;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace SimpleComponent
 {
-    [Component(typeof(IMyOtherComponent), typeof(MyOtherComponentOptions), Lifetime.Singleton)]
-    public class MyOtherComponent : IMyOtherComponent
+    [Component(typeof(MyComponentOptions), ServiceLifetime.Singleton, typeof(IMyComponent), typeof(IMyOtherComponent))]
+    public class MyOtherComponent : IMyOtherComponent, IMyComponent
     { 
     }
 }

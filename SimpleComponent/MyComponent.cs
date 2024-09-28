@@ -1,9 +1,10 @@
 ﻿using ComponentGenerator;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace SimpleComponent
 {
-    [Component(typeof(IMyComponent),typeof(MyComponentOptions),Lifetime.Singleton)]
+    [Component(typeof(MyComponentOptions),ServiceLifetime.Singleton, typeof(IMyComponent))]
     public class MyComponent : IMyComponent
     {
         private readonly MyComponentOptions _options;
