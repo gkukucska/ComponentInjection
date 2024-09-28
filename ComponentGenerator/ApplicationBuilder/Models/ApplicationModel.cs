@@ -5,8 +5,17 @@ namespace ComponentGenerator.ApplicationBuilder.Models
 {
     internal class ApplicationModel
     {
-        public string ComponentSection { get; internal set; }
-        public List<string> ReferencedComponents { get; internal set; }
-        public INamespaceSymbol ApplicationNamespace { get; internal set; }
+        public string ComponentSection { get; }
+        public List<string> ReferencedComponents { get; }
+        public List<string> ReferencedServices { get; }
+        public INamespaceSymbol ApplicationNamespace { get; }
+
+        public ApplicationModel(string componentSection, List<string> referencedServices, List<string> referencedComponents, INamespaceSymbol applicationNamespace)
+        {
+            ComponentSection = componentSection;
+            ReferencedServices = referencedServices;
+            ReferencedComponents = referencedComponents;
+            ApplicationNamespace = applicationNamespace;
+        }
     }
 }

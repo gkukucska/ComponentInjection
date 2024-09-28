@@ -1,6 +1,7 @@
 ﻿using ComponentGenerator;
 using ComponentGenerator.ApplicationBuilder.Models;
 using Microsoft.CodeAnalysis;
+using System;
 using System.Linq;
 using System.Reflection;
 
@@ -34,7 +35,8 @@ namespace {model.ApplicationNamespace}
             var aliases = builder.Configuration.GetRequiredSection(""{model.ComponentSection}"")
                                                .AsEnumerable();
 
-{GenerateInstallationSyntax(model)}
+{GenerateComponentInstallationSyntax(model)}
+{GenerateServiceInstallationSyntax(model)}
 
             return builder;
 
@@ -46,7 +48,13 @@ namespace {model.ApplicationNamespace}
         context.AddSource("ComponentBuilderExtensions.g.cs", builderExtensionSyntax);
     }
 
-    internal static string GenerateInstallationSyntax(ApplicationModel model)
+    private static string GenerateServiceInstallationSyntax(ApplicationModel model)
+    {
+        return string.Join(string.Empty, model.ReferencedComponents.Select(x => $@"
+            builder.Install{Helpers.ToSnakeCase(x)}();"));
+    }
+
+    internal static string GenerateComponentInstallationSyntax(ApplicationModel model)
     {
         return string.Join(string.Empty, model.ReferencedComponents.Select(x => $@"
             foreach (var alias in aliases.Where(x => x.Value == ""{x}"").Select(x=>x.Key.Replace(""{model.ComponentSection}:"",string.Empty)))
