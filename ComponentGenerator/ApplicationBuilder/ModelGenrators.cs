@@ -1,4 +1,4 @@
-﻿using ComponentGenerator.ApplicationBuilder.Model;
+﻿using ComponentGenerator.ApplicationBuilder.Models;
 using Microsoft.CodeAnalysis;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,16 +39,13 @@ namespace ComponentGenerator.ApplicationBuilder
                 }
             });
 
-            var componentSymbol = context.SemanticModel.Compilation.GetTypeByMetadataName("ComponentGenerator.ComponentAttribute");
+            var serviceSymbol = context.SemanticModel.Compilation.GetTypeByMetadataName("ComponentGenerator.ServiceAttribute");
+            var services = types.Where(x => x.GetAttributes().Any(a => a.AttributeClass.Name.Equals(serviceSymbol.Name))).OfType<INamedTypeSymbol>().Select(x => x.ToString()).ToList();
 
+            var componentSymbol = context.SemanticModel.Compilation.GetTypeByMetadataName("ComponentGenerator.ComponentAttribute");
             var components = types.Where(x => x.GetAttributes().Any(a => a.AttributeClass.Name.Equals(componentSymbol.Name))).OfType<INamedTypeSymbol>().Select(x => x.ToString()).ToList();
 
-            return new ApplicationModel
-            {
-                ApplicationNamespace = applicationNamespace,
-                ComponentSection = componentSection,
-                ReferencedComponents = components
-            };
+            return new ApplicationModel(componentSection, services, components, applicationNamespace);
         }
 
         private static IEnumerable<ITypeSymbol> GetAllTypes(INamespaceSymbol root)

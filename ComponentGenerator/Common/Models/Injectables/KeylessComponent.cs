@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ComponentGenerator.ComponentBuilder.Models.Injectables
+namespace ComponentGenerator.Common.Models.Injectables
 {
     internal class KeylessComponent : ComponentModel
     {
