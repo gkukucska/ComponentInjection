@@ -8,4 +8,10 @@ namespace SimpleService
     {
 
     }
+
+    [KeyedService(nameof(MySimpleKeyedService),ServiceLifetime.Singleton,typeof(IMyService))]
+    public class MySimpleKeyedService : IMyService
+    {
+
+    }
 }

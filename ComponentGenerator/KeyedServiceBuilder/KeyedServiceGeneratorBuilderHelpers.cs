@@ -33,7 +33,7 @@ namespace ComponentBuilderExtensions
         [GeneratedCode(""{Assembly.GetExecutingAssembly().GetName().Name}"", ""{Assembly.GetExecutingAssembly().GetName().Version}"")]
         public static IHostApplicationBuilder Install{Helpers.ToSnakeCase(model.ClassName)}(this IHostApplicationBuilder builder)
         {{
-            builder.Services.AddKeyed{GetLifeTimeSyntax(model.Lifetime)}<{model.ClassName}, {model.ClassName}>({model.ServiceKey});
+            builder.Services.AddKeyed{GetLifeTimeSyntax(model.Lifetime)}<{model.ClassName}, {model.ClassName}>(""{model.ServiceKey}"");
 {GenerateProxyFactoryRegistrationSyntax(model)}
             return builder;
         }}
@@ -41,9 +41,9 @@ namespace ComponentBuilderExtensions
         [CompilerGenerated]
         [ExcludeFromCodeCoverage]
         [GeneratedCode(""{Assembly.GetExecutingAssembly().GetName().Name}"", ""{Assembly.GetExecutingAssembly().GetName().Version}"")]
-        private static {model.ClassName} {Helpers.ToSnakeCase(model.ClassName)}ProxyFactory(IServiceProvider provider, objet key)
+        private static {model.ClassName} {Helpers.ToSnakeCase(model.ClassName)}ProxyFactory(IServiceProvider provider, object key)
         {{
-            return provider.GetRequiredService<{model.ClassName}>(key);
+            return provider.GetRequiredKeyedService<{model.ClassName}>(key);
         }}
     }}
 }}

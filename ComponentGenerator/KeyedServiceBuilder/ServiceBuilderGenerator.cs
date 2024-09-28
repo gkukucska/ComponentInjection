@@ -9,7 +9,7 @@ namespace ComponentGenerator.KeyedServiceBuilder
         public void Initialize(IncrementalGeneratorInitializationContext context)
         {
             context.RegisterPostInitializationOutput(HelperSyntaxGenerators.GenerateAttributes);
-            var componentProvider = context.SyntaxProvider.ForAttributeWithMetadataName("ComponentGenerator.ServiceAttribute",
+            var componentProvider = context.SyntaxProvider.ForAttributeWithMetadataName("ComponentGenerator.KeyedServiceAttribute",
                                                                                         predicate: (node, _) => node is ClassDeclarationSyntax,
                                                                                         transform: ModelGenerators.GenerateModel);
             context.RegisterSourceOutput(componentProvider, KeyedServiceGeneratorBuilderHelpers.GenerateKeyedServiceBuilderSyntax);
