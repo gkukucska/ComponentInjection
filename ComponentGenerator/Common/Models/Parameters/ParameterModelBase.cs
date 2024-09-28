@@ -1,4 +1,4 @@
-﻿namespace ComponentGenerator.ComponentBuilder.Models.Parameters
+﻿namespace ComponentGenerator.Common.Models.Parameters
 {
     internal abstract class ParameterModelBase
     {

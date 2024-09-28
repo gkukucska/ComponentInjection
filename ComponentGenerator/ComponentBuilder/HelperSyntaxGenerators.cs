@@ -44,19 +44,6 @@ namespace ComponentGenerator
     }}
 
     [AttributeUsage(AttributeTargets.Class,AllowMultiple =true,Inherited =true)]
-    internal class ServiceAttribute: Attribute 
-    {{
-        private readonly ServiceLifetime _lifetime;
-        private readonly Type[] _implementationTypeCollection;
-
-        public ServiceAttribute(ServiceLifetime lifetime, params Type[] implementationTypeCollection)
-        {{
-            _implementationTypeCollection = implementationTypeCollection;
-            _lifetime = lifetime;
-        }}
-    }}
-
-    [AttributeUsage(AttributeTargets.Class,AllowMultiple =true,Inherited =true)]
     internal class KeyedServiceAttribute: Attribute 
     {{
         private readonly string _serviceKey;

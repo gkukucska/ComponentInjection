@@ -1,6 +1,6 @@
-﻿using ComponentGenerator.ComponentBuilder.Models;
-using ComponentGenerator.ComponentBuilder.Models.Injectables;
-using ComponentGenerator.ComponentBuilder.Models.Parameters;
+﻿using ComponentGenerator.Common.Models;
+using ComponentGenerator.Common.Models.Injectables;
+using ComponentGenerator.Common.Models.Parameters;
 using Microsoft.CodeAnalysis;
 using System.Collections.Generic;
 using System.Linq;
