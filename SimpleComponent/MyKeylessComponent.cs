@@ -4,14 +4,14 @@ using Microsoft.Extensions.Logging;
 
 namespace SimpleComponent
 {
-    [Component(typeof(MyComponentOptions), ServiceLifetime.Singleton, typeof(IMyComponent))]
-    public class MyComponent : IMyComponent
+    [Component(typeof(MyKeylessComponentOptions), ServiceLifetime.Singleton, typeof(IMyComponent))]
+    public class MyKeylessComponent : IMyComponent
     {
-        private readonly MyComponentOptions _options;
+        private readonly MyKeylessComponentOptions _options;
         private readonly IMyOtherComponent _otherComponent;
         private readonly ILogger<MyComponent> _logger;
 
-        public MyComponent(MyComponentOptions options, [Alias] IMyOtherComponent otherComponent, ILogger<MyComponent> logger)
+        public MyKeylessComponent(MyKeylessComponentOptions options, [Alias] IMyOtherComponent otherComponent, ILogger<MyComponent> logger)
         {
             _options = options;
             _otherComponent = otherComponent;
