@@ -55,7 +55,7 @@ namespace ComponentBuilderExtensions
             var builder = new StringBuilder();
             foreach (var implementation in model.ImplementationCollection)
             {
-                builder.AppendLine($@"              builder.Services.AddKeyed{GetLifeTimeSyntax(model.Lifetime)}<{implementation}, {model.ClassName}>({Helpers.ToSnakeCase(model.ClassName)}ProxyFactory,{model.ServiceKey});");
+                builder.AppendLine($@"              builder.Services.AddKeyed{GetLifeTimeSyntax(model.Lifetime)}<{implementation}, {model.ClassName}>({Helpers.ToSnakeCase(model.ClassName)}ProxyFactory);");
             }
             return builder.ToString();
         }
