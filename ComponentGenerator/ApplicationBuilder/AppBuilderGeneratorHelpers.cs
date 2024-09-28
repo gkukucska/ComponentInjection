@@ -13,6 +13,7 @@ internal static class AppBuilderGeneratorHelpers
         {
             return;
         }
+
         var builderExtensionSyntax = $@"//compiler generated
 #nullable disable
 using System.CodeDom.Compiler;

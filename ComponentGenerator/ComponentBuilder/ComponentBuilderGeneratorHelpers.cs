@@ -14,6 +14,10 @@ namespace ComponentGenerator.ComponentBuilder
 
         internal static void GenerateComponentBuilderSyntax(SourceProductionContext context, ComponentModel model)
         {
+            if (model is null)
+            {
+                return;
+            }
 
             var builderExtensionSyntax = $@"//compiler generated
 #nullable disable

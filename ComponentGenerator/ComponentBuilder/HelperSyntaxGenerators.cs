@@ -13,7 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ComponentGenerator 
 {{
-    [AttributeUsage(AttributeTargets.Class,AllowMultiple =true,Inherited =true)]
+    [AttributeUsage(AttributeTargets.Class,AllowMultiple = false,Inherited = true)]
     internal class ComponentAttribute: Attribute 
     {{
         private readonly Type _optionType;
@@ -28,7 +28,7 @@ namespace ComponentGenerator
         }}
     }}
 
-    [AttributeUsage(AttributeTargets.Class,AllowMultiple =true,Inherited =true)]
+    [AttributeUsage(AttributeTargets.Class,AllowMultiple = false,Inherited = true)]
     internal class KeylessComponentAttribute: Attribute 
     {{
         private readonly Type _optionType;
@@ -42,23 +42,8 @@ namespace ComponentGenerator
             _lifetime = lifetime;
         }}
     }}
-
-    [AttributeUsage(AttributeTargets.Class,AllowMultiple =true,Inherited =true)]
-    internal class KeyedServiceAttribute: Attribute 
-    {{
-        private readonly string _serviceKey;
-        private readonly ServiceLifetime _lifetime;
-        private readonly Type[] _implementationTypeCollection;
-
-        public KeyedServiceAttribute(string serviceKey, ServiceLifetime lifetime, params Type[] implementationTypeCollection)
-        {{
-            _serviceKey = serviceKey;
-            _implementationTypeCollection = implementationTypeCollection;
-            _lifetime = lifetime;
-        }}
-    }}
     
-    [AttributeUsage(AttributeTargets.Parameter,AllowMultiple =false,Inherited =true)]
+    [AttributeUsage(AttributeTargets.Parameter,AllowMultiple = false,Inherited = true)]
     internal class AliasAttribute: Attribute
     {{
     }}
