@@ -19,7 +19,7 @@ namespace ComponentGenerator.ServiceBuilder
             var lifetime = serviceAttributeSymbol.ConstructorArguments[0].Value.ToString();
             var interfaceCollection = serviceAttributeSymbol.ConstructorArguments[1].Values.Select(x => x.Value.ToString()).ToList();
 
-            var className = classSymbol.Name.ToString();
+            var className = classSymbol.ToString();
             return new ServiceModel(className, interfaceCollection, lifetime);
         }
     }

@@ -34,7 +34,7 @@ namespace ComponentBuilderExtensions
         public static IHostApplicationBuilder Install{Helpers.ToSnakeCase(model.ClassName)}(this IHostApplicationBuilder builder)
         {{
             builder.Services.Add{GetLifeTimeSyntax(model.Lifetime)}<{model.ClassName}, {model.ClassName}>();
-            {GenerateProxyFactoryRegistrationSyntax(model)}
+{GenerateProxyFactoryRegistrationSyntax(model)}
             return builder;
         }}
 
@@ -55,7 +55,7 @@ namespace ComponentBuilderExtensions
             var builder = new StringBuilder();
             foreach (var implementation in model.ImplementationCollection)
             {
-                builder.AppendLine($@"builder.Services.Add{GetLifeTimeSyntax(model.Lifetime)}<{implementation}, {model.ClassName}>({Helpers.ToSnakeCase(model.ClassName)}ProxyFactory);");
+                builder.AppendLine($@"              builder.Services.Add{GetLifeTimeSyntax(model.Lifetime)}<{implementation}, {model.ClassName}>({Helpers.ToSnakeCase(model.ClassName)}ProxyFactory);");
             }
             return builder.ToString();
         }

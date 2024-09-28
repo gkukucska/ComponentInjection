@@ -50,7 +50,7 @@ namespace {model.ApplicationNamespace}
 
     private static string GenerateServiceInstallationSyntax(ApplicationModel model)
     {
-        return string.Join(string.Empty, model.ReferencedComponents.Select(x => $@"
+        return string.Join(string.Empty, model.ReferencedServices.Select(x => $@"
             builder.Install{Helpers.ToSnakeCase(x)}();"));
     }
 
