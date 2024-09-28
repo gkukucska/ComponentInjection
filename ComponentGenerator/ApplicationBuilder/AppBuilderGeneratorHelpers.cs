@@ -1,7 +1,6 @@
 ﻿using ComponentGenerator;
 using ComponentGenerator.ApplicationBuilder.Models;
 using Microsoft.CodeAnalysis;
-using System;
 using System.Linq;
 using System.Reflection;
 
