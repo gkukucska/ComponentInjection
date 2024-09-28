@@ -42,10 +42,13 @@ namespace ComponentGenerator.ApplicationBuilder
             var serviceSymbol = context.SemanticModel.Compilation.GetTypeByMetadataName("ComponentGenerator.ServiceAttribute");
             var services = types.Where(x => x.GetAttributes().Any(a => a.AttributeClass.Name.Equals(serviceSymbol.Name))).OfType<INamedTypeSymbol>().Select(x => x.ToString()).ToList();
 
+            var keyedServiceSymbol = context.SemanticModel.Compilation.GetTypeByMetadataName("ComponentGenerator.KeyedServiceAttribute");
+            var keyedServices = types.Where(x => x.GetAttributes().Any(a => a.AttributeClass.Name.Equals(keyedServiceSymbol.Name))).OfType<INamedTypeSymbol>().Select(x => x.ToString()).ToList();
+
             var componentSymbol = context.SemanticModel.Compilation.GetTypeByMetadataName("ComponentGenerator.ComponentAttribute");
             var components = types.Where(x => x.GetAttributes().Any(a => a.AttributeClass.Name.Equals(componentSymbol.Name))).OfType<INamedTypeSymbol>().Select(x => x.ToString()).ToList();
 
-            return new ApplicationModel(componentSection, services, components, applicationNamespace);
+            return new ApplicationModel(componentSection, services, keyedServices, components, applicationNamespace);
         }
 
         private static IEnumerable<ITypeSymbol> GetAllTypes(INamespaceSymbol root)

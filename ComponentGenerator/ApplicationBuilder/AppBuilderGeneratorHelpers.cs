@@ -13,6 +13,7 @@ internal static class AppBuilderGeneratorHelpers
         {
             return;
         }
+
         var builderExtensionSyntax = $@"//compiler generated
 #nullable disable
 using System.CodeDom.Compiler;
@@ -36,6 +37,7 @@ namespace {model.ApplicationNamespace}
 
 {GenerateComponentInstallationSyntax(model)}
 {GenerateServiceInstallationSyntax(model)}
+{GenerateKeyedServiceInstallationSyntax(model)}
 
             return builder;
 
@@ -50,7 +52,13 @@ namespace {model.ApplicationNamespace}
     private static string GenerateServiceInstallationSyntax(ApplicationModel model)
     {
         return string.Join(string.Empty, model.ReferencedServices.Select(x => $@"
-            builder.Install{Helpers.ToSnakeCase(x)}();"));
+            builder.InstallAsService_{Helpers.ToSnakeCase(x)}();"));
+    }
+
+    private static string GenerateKeyedServiceInstallationSyntax(ApplicationModel model)
+    {
+        return string.Join(string.Empty, model.ReferencedKeyedServices.Select(x => $@"
+            builder.InstallAsKeyedService_{Helpers.ToSnakeCase(x)}();"));
     }
 
     internal static string GenerateComponentInstallationSyntax(ApplicationModel model)
@@ -58,7 +66,7 @@ namespace {model.ApplicationNamespace}
         return string.Join(string.Empty, model.ReferencedComponents.Select(x => $@"
             foreach (var alias in aliases.Where(x => x.Value == ""{x}"").Select(x=>x.Key.Replace(""{model.ComponentSection}:"",string.Empty)))
             {{
-                builder.Install{Helpers.ToSnakeCase(x)}(alias);
+                builder.InstallAsComponent_{Helpers.ToSnakeCase(x)}(alias);
             }}"));
     }
 }

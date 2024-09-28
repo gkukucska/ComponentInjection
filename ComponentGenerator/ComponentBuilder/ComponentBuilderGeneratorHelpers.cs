@@ -14,6 +14,10 @@ namespace ComponentGenerator.ComponentBuilder
 
         internal static void GenerateComponentBuilderSyntax(SourceProductionContext context, ComponentModel model)
         {
+            if (model is null)
+            {
+                return;
+            }
 
             var builderExtensionSyntax = $@"//compiler generated
 #nullable disable
@@ -32,7 +36,7 @@ namespace ComponentBuilderExtensions
         [CompilerGenerated]
         [ExcludeFromCodeCoverage]
         [GeneratedCode(""{Assembly.GetExecutingAssembly().GetName().Name}"", ""{Assembly.GetExecutingAssembly().GetName().Version}"")]
-        public static IHostApplicationBuilder Install{Helpers.ToSnakeCase(model.ClassName)}(this IHostApplicationBuilder builder, string key)
+        public static IHostApplicationBuilder InstallAsComponent_{Helpers.ToSnakeCase(model.ClassName)}(this IHostApplicationBuilder builder, string key)
         {{
             builder.Services.AddOptions<{model.OptionType}>(key).Bind(builder.Configuration.GetSection(key));
             builder.Services.AddKeyed{GetLifeTimeSyntax(model.Lifetime)}<{model.ClassName}, {model.ClassName}>(key, {Helpers.ToSnakeCase(model.ClassName)}Factory);

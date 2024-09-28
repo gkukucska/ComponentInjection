@@ -3,11 +3,11 @@ using Microsoft.CodeAnalysis;
 using System.Reflection;
 using System.Text;
 
-namespace ComponentGenerator.ServiceBuilder
+namespace ComponentGenerator.KeyedServiceBuilder
 {
-    internal static class ServiceGeneratorBuilderHelpers
+    internal static class KeyedServiceGeneratorBuilderHelpers
     {
-        internal static void GenerateServiceBuilderSyntax(SourceProductionContext context, ServiceModel model)
+        internal static void GenerateKeyedServiceBuilderSyntax(SourceProductionContext context, KeyedServiceModel model)
         {
             if (model is null)
             {
@@ -31,9 +31,9 @@ namespace ComponentBuilderExtensions
         [CompilerGenerated]
         [ExcludeFromCodeCoverage]
         [GeneratedCode(""{Assembly.GetExecutingAssembly().GetName().Name}"", ""{Assembly.GetExecutingAssembly().GetName().Version}"")]
-        public static IHostApplicationBuilder InstallAsService_{Helpers.ToSnakeCase(model.ClassName)}(this IHostApplicationBuilder builder)
+        public static IHostApplicationBuilder InstallAsKeyedService_{Helpers.ToSnakeCase(model.ClassName)}(this IHostApplicationBuilder builder)
         {{
-            builder.Services.Add{GetLifeTimeSyntax(model.Lifetime)}<{model.ClassName}, {model.ClassName}>();
+            builder.Services.AddKeyed{GetLifeTimeSyntax(model.Lifetime)}<{model.ClassName}, {model.ClassName}>(""{model.ServiceKey}"");
 {GenerateProxyFactoryRegistrationSyntax(model)}
             return builder;
         }}
@@ -41,21 +41,21 @@ namespace ComponentBuilderExtensions
         [CompilerGenerated]
         [ExcludeFromCodeCoverage]
         [GeneratedCode(""{Assembly.GetExecutingAssembly().GetName().Name}"", ""{Assembly.GetExecutingAssembly().GetName().Version}"")]
-        private static {model.ClassName} {Helpers.ToSnakeCase(model.ClassName)}ProxyFactory(IServiceProvider provider)
+        private static {model.ClassName} {Helpers.ToSnakeCase(model.ClassName)}ProxyFactory(IServiceProvider provider, object key)
         {{
-            return provider.GetRequiredService<{model.ClassName}>();
+            return provider.GetRequiredKeyedService<{model.ClassName}>(key);
         }}
     }}
 }}
             ";
             context.AddSource($"{Helpers.ToSnakeCase(model.ClassName)}_BuilderExtensions.g.cs", builderExtensionSyntax);
         }
-        private static string GenerateProxyFactoryRegistrationSyntax(ServiceModel model)
+        private static string GenerateProxyFactoryRegistrationSyntax(KeyedServiceModel model)
         {
             var builder = new StringBuilder();
             foreach (var implementation in model.ImplementationCollection)
             {
-                builder.AppendLine($@"              builder.Services.Add{GetLifeTimeSyntax(model.Lifetime)}<{implementation}, {model.ClassName}>({Helpers.ToSnakeCase(model.ClassName)}ProxyFactory);");
+                builder.AppendLine($@"              builder.Services.AddKeyed{GetLifeTimeSyntax(model.Lifetime)}<{implementation}, {model.ClassName}>({Helpers.ToSnakeCase(model.ClassName)}ProxyFactory);");
             }
             return builder.ToString();
         }
