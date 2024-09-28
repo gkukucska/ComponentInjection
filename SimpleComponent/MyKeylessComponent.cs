@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 
 namespace SimpleComponent
 {
-    [Component(typeof(MyKeylessComponentOptions), ServiceLifetime.Singleton, typeof(IMyComponent))]
+    [KeylessComponent(typeof(MyKeylessComponentOptions), ServiceLifetime.Singleton, typeof(IMyComponent))]
     public class MyKeylessComponent : IMyComponent
     {
         private readonly MyKeylessComponentOptions _options;

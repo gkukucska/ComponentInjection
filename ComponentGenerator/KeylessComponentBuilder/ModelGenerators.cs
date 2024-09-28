@@ -24,7 +24,7 @@ namespace ComponentGenerator.KeylessComponentBuilder
             var lifetime = componentAttributeSymbol.ConstructorArguments[1].Value.ToString();
             var interfaceCollection = componentAttributeSymbol.ConstructorArguments[2].Values.Select(x=>x.Value.ToString()).ToList();
 
-            var constructorParameters = GetConstructorParameters(context.SemanticModel,classSymbol).ToList();
+            var constructorParameters = ComponentBuilder.ModelGenerators.GetConstructorParameters(context.SemanticModel,classSymbol).ToList();
 
             var constructorModel = new ConstructorModel(constructorParameters);
 
@@ -37,40 +37,6 @@ namespace ComponentGenerator.KeylessComponentBuilder
                 optionType
                 );
 
-        }
-
-        private static IEnumerable<ParameterModelBase> GetConstructorParameters(SemanticModel semanticModel,INamedTypeSymbol classSymbol)
-        {
-            var constructorSymbol = classSymbol.Constructors.OrderByDescending(x => x.Parameters.Count()).FirstOrDefault();
-            var aliasSymbol = semanticModel.Compilation.GetTypeByMetadataName("ComponentGenerator.AliasAttribute");
-            var serviceKeySymbol = semanticModel.Compilation.GetTypeByMetadataName("Microsoft.Extensions.DependencyInjection.ServiceKeyAttribute");
-            var keyedServiceSymbol = semanticModel.Compilation.GetTypeByMetadataName("Microsoft.Extensions.DependencyInjection.FromKeyedServicesAttribute");
-
-            foreach (var parameterSymbol in constructorSymbol.Parameters)
-            {
-                var attributes = parameterSymbol.GetAttributes();
-                if (attributes.Any(x => x.AttributeClass.Equals(aliasSymbol, SymbolEqualityComparer.Default)))
-                {
-                    yield return new AliasParameterModel(parameterSymbol.Name, parameterSymbol.Type.ToString());
-                    continue;
-                }
-                if (attributes.Any(x => x.AttributeClass.Equals(serviceKeySymbol, SymbolEqualityComparer.Default)))
-                {
-                    yield return new ServiceKeyParameterModel(parameterSymbol.Name, parameterSymbol.Type.ToString());
-                    continue;
-                }
-                var keyedServiceAttribute = attributes.FirstOrDefault(x => x.AttributeClass.Equals(keyedServiceSymbol, SymbolEqualityComparer.Default));
-                if (!(keyedServiceAttribute is null))
-                {
-                    yield return new KeyedServiceParameterModel(parameterSymbol.Name, parameterSymbol.Type.ToString(),keyedServiceAttribute.ConstructorArguments.First().Value.ToString());
-                    continue;
-                }
-                yield return new ServiceParameterModel
-                (
-                    parameterSymbol.Name,
-                    parameterSymbol.Type.ToString()
-                );
-            }
         }
     }
 }

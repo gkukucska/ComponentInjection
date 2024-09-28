@@ -2,7 +2,7 @@
 {
     internal class AliasParameterModel : ParameterModelBase
     {
-        public AliasParameterModel(string name, string type) : base(name, type)
+        public AliasParameterModel(string name, string type, bool isOptional) : base(name, type, isOptional)
         {
         }
     }

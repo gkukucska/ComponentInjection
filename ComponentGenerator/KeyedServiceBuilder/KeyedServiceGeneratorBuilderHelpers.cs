@@ -33,7 +33,7 @@ namespace ComponentBuilderExtensions
         [GeneratedCode(""{Assembly.GetExecutingAssembly().GetName().Name}"", ""{Assembly.GetExecutingAssembly().GetName().Version}"")]
         public static IHostApplicationBuilder InstallAsKeyedService_{Helpers.ToSnakeCase(model.ClassName)}(this IHostApplicationBuilder builder)
         {{
-            builder.Services.AddKeyed{GetLifeTimeSyntax(model.Lifetime)}<{model.ClassName}, {model.ClassName}>(""{model.ServiceKey}"");
+            builder.Services.AddKeyed{Helpers.GetLifeTimeSyntax(model.Lifetime)}<{model.ClassName}, {model.ClassName}>(""{model.ServiceKey}"");
 {GenerateProxyFactoryRegistrationSyntax(model)}
             return builder;
         }}
@@ -55,24 +55,9 @@ namespace ComponentBuilderExtensions
             var builder = new StringBuilder();
             foreach (var implementation in model.ImplementationCollection)
             {
-                builder.AppendLine($@"              builder.Services.AddKeyed{GetLifeTimeSyntax(model.Lifetime)}<{implementation}, {model.ClassName}>({Helpers.ToSnakeCase(model.ClassName)}ProxyFactory);");
+                builder.AppendLine($@"              builder.Services.AddKeyed{Helpers.GetLifeTimeSyntax(model.Lifetime)}<{implementation}, {model.ClassName}>({Helpers.ToSnakeCase(model.ClassName)}ProxyFactory);");
             }
             return builder.ToString();
-        }
-
-        private static string GetLifeTimeSyntax(string lifetime)
-        {
-            switch (lifetime)
-            {
-                case "0":
-                    return "Singleton";
-                case "1":
-                    return "Transient";
-                case "2":
-                    return "Scoped";
-                default:
-                    return string.Empty;
-            }
         }
     }
 }
