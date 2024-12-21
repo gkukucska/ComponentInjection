@@ -1,5 +1,6 @@
 ﻿using ComponentGenerator.Common.Models.Injectables;
 using Microsoft.CodeAnalysis;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 
@@ -7,6 +8,9 @@ namespace ComponentGenerator.KeyedServiceBuilder
 {
     internal static class KeyedServiceGeneratorBuilderHelpers
     {
+        private static KeyedServiceModel _lastModel;
+        private static KeyValuePair<string, string> _lastAction;
+
         internal static void GenerateKeyedServiceBuilderSyntax(SourceProductionContext context, KeyedServiceModel model)
         {
             if (model is null)
@@ -14,8 +18,9 @@ namespace ComponentGenerator.KeyedServiceBuilder
                 return;
             }
 
-
-            var builderExtensionSyntax = $@"//compiler generated
+            if (_lastModel != model)
+            {
+                var builderExtensionSyntax = $@"//compiler generated
 #nullable disable
 using System.CodeDom.Compiler;
 using Microsoft.Extensions.Hosting;
@@ -48,7 +53,11 @@ namespace ComponentBuilderExtensions
     }}
 }}
             ";
-            context.AddSource($"{Helpers.ToSnakeCase(model.ClassName)}_BuilderExtensions.g.cs", builderExtensionSyntax);
+
+                _lastAction = new KeyValuePair<string, string>($"{Helpers.ToSnakeCase(model.ClassName)}_BuilderExtensions.g.cs", builderExtensionSyntax);
+                _lastModel = model;
+            }
+            context.AddSource(_lastAction.Key, _lastAction.Value);
         }
         private static string GenerateProxyFactoryRegistrationSyntax(KeyedServiceModel model)
         {
