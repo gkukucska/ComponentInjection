@@ -21,7 +21,9 @@ namespace ComponentGenerator.KeylessComponentBuilder
 
             var builderExtensionSyntax = $@"//compiler generated
 #nullable disable
+using System.Linq;
 using System.CodeDom.Compiler;
+using System.Collections.Generic;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -86,7 +88,7 @@ namespace ComponentBuilderExtensions
             var parameterSyntaxCollection = new List<string>();
             foreach (var parameter in model.Constructor.Parameters)
             {
-                if (parameter is AliasParameterModel)
+                if (parameter is AliasParameterModel || parameter is AliasCollectionParameterModel)
                 {
                     parameterSyntaxCollection.Add(parameter.Name);
                     continue;
@@ -107,7 +109,7 @@ namespace ComponentBuilderExtensions
 
         internal static void GenerateKeylessComponentOptionSyntax(SourceProductionContext context, ComponentModel model)
         {
-            if (!model.Constructor.Parameters.OfType<AliasParameterModel>().Any())
+            if (!model.Constructor.Parameters.OfType<AliasParameterModel>().Any() && !model.Constructor.Parameters.OfType<AliasCollectionParameterModel>().Any())
             {
                 return;
             }
@@ -117,6 +119,7 @@ namespace ComponentBuilderExtensions
             var optionNamespace = string.Join(".", model.OptionType.Split('.').Take(model.OptionType.Split('.').Count() - 1));
             var optionSyntax = $@"//compiler generated
 using System.CodeDom.Compiler;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
@@ -128,20 +131,12 @@ namespace {optionNamespace}
     [GeneratedCode(""{Assembly.GetExecutingAssembly().GetName().Name}"", ""{Assembly.GetExecutingAssembly().GetName().Version}"")]
     partial class {optionClassName}
     {{
-        {GenerateAliasProperties(model)}
+{ComponentBuilder.ComponentBuilderGeneratorHelpers.GenerateAliasProperties(model)}
     }}
 }}
 ";
 
             context.AddSource($"{optionClassName}.g.cs", optionSyntax);
-        }
-
-        private static string GenerateAliasProperties(ComponentModel model)
-        {
-            var aliasProperties = model.Constructor.Parameters.OfType<AliasParameterModel>().Select(x =>
-$@"        public string {Helpers.CapitalizeFirstLetter(x.Name)} {{ get; set; }}");
-
-            return string.Join("\n", aliasProperties);
         }
     }
 }

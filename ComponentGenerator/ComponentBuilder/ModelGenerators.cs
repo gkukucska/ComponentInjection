@@ -44,6 +44,7 @@ namespace ComponentGenerator.ComponentBuilder
         {
             var constructorSymbol = classSymbol.Constructors.OrderByDescending(x => x.Parameters.Count()).FirstOrDefault();
             var aliasSymbol = semanticModel.Compilation.GetTypeByMetadataName("ComponentGenerator.AliasAttribute");
+            var aliasCollectionSymbol = semanticModel.Compilation.GetTypeByMetadataName("ComponentGenerator.AliasCollectionAttribute");
             var optionalSymbol = semanticModel.Compilation.GetTypeByMetadataName("ComponentGenerator.OptionalAttribute");
             var serviceKeySymbol = semanticModel.Compilation.GetTypeByMetadataName("Microsoft.Extensions.DependencyInjection.ServiceKeyAttribute");
             var keyedServiceSymbol = semanticModel.Compilation.GetTypeByMetadataName("Microsoft.Extensions.DependencyInjection.FromKeyedServicesAttribute");
@@ -55,6 +56,18 @@ namespace ComponentGenerator.ComponentBuilder
                 if (attributes.Any(x => x.AttributeClass.Equals(aliasSymbol, SymbolEqualityComparer.Default)))
                 {
                     yield return new AliasParameterModel(parameterSymbol.Name, parameterSymbol.Type.ToString(), isOptional);
+                    continue;
+                }
+                if (attributes.Any(x => x.AttributeClass.Equals(aliasCollectionSymbol, SymbolEqualityComparer.Default)))
+                {
+                    if (!(parameterSymbol.Type is INamedTypeSymbol namedTypeSymbol))
+                        continue;
+                    if (!(namedTypeSymbol.TypeArguments.FirstOrDefault() is null))
+                    {
+                        var internalType = namedTypeSymbol.TypeArguments.First();
+                        isOptional &= internalType.NullableAnnotation == NullableAnnotation.Annotated;
+                        yield return new AliasCollectionParameterModel(parameterSymbol.Name, internalType.ToString(), isOptional);
+                    }
                     continue;
                 }
                 if (attributes.Any(x => x.AttributeClass.Equals(serviceKeySymbol, SymbolEqualityComparer.Default)))
