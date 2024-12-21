@@ -42,13 +42,13 @@ namespace ComponentGenerator.CodeFixes
             var newAttributes = new SyntaxList<AttributeListSyntax>();
             foreach (var attributeListSyntax in oldAttributes)
             {
-                if (attributeListSyntax.Attributes.All(attribute => attribute.Name.ToString() != node.Name.ToString()))
+                if (attributeListSyntax.Attributes.All(attribute => attribute != node))
                 {
                     newAttributes = newAttributes.Add(attributeListSyntax);
                     continue;
                 }
 
-                var newAttributeSyntaxes = attributeListSyntax.Attributes.Remove(attributeListSyntax.Attributes.First(attribute => attribute.Name.ToString() == node.Name.ToString()));
+                var newAttributeSyntaxes = attributeListSyntax.Attributes.Remove(node);
                 foreach (var newAttribute in newAttributeSyntaxes)
                 {
                     newAttributes= newAttributes.Add(AttributeList(SingletonSeparatedList<AttributeSyntax>(newAttribute)));
