@@ -13,17 +13,17 @@ namespace ComponentGenerator.Analyzers
     {
         internal const string DiagnosticId = "COMP001";
 
-        internal static DiagnosticDescriptor Rule = new DiagnosticDescriptor(
+        private static readonly DiagnosticDescriptor _rule = new DiagnosticDescriptor(
                 id: DiagnosticId,
                 title: "AliasCollection can only be attached to IEnumerable",
-                messageFormat: "AliasCollection cannot be built from Type '{0}'.",
+                messageFormat: "AliasCollection cannot be built from Type '{0}'",
                 category: "Design",
                 defaultSeverity: DiagnosticSeverity.Error,
                 isEnabledByDefault: true,
                 description: "The AliasCollection attribute needs to be attached to IEnumerable."
                 );
         
-        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
+        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(_rule);
 
         public override void Initialize(AnalysisContext context)
         {
@@ -41,13 +41,22 @@ namespace ComponentGenerator.Analyzers
 
             foreach (var parameter in aliasCollectionParameters)
             {
-                if (!(parameter.Type is GenericNameSyntax genericNameSyntax) || !parameter.Type.ToString().StartsWith("IEnumerable"))
+                if (!GetGenericNameSyntax(parameter)?.ToString().StartsWith("IEnumerable") ?? true)
                 {
                     var attributeLocation = parameter.GetLocation();
-                    var diagnostic = Diagnostic.Create(Rule, attributeLocation, parameter.Type.ToString());
+                    var diagnostic = Diagnostic.Create(_rule, attributeLocation, parameter.Type?.ToString());
                     context.ReportDiagnostic(diagnostic);
                 }
             }
+        }
+
+        internal static GenericNameSyntax GetGenericNameSyntax(ParameterSyntax node)
+        {
+            if (node.Type is NullableTypeSyntax nullableType)
+            {
+                return nullableType.ElementType as GenericNameSyntax;
+            }
+            return node.Type as GenericNameSyntax;
         }
         
         private static IEnumerable<AttributeSyntax> GetAttributes(ParameterSyntax parameterSyntax)
