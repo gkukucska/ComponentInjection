@@ -34,6 +34,11 @@ namespace ComponentGenerator
     }}
     
     [AttributeUsage(AttributeTargets.Parameter,AllowMultiple = false,Inherited = true)]
+    internal class AliasCollectionAttribute: Attribute
+    {{
+    }}
+    
+    [AttributeUsage(AttributeTargets.Parameter,AllowMultiple = false,Inherited = true)]
     internal class OptionalAttribute: Attribute
     {{
     }}

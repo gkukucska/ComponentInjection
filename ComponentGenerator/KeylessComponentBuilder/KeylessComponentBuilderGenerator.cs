@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace ComponentGenerator.KeylessComponentBuilder
 {
     [Generator]
-    public class KeylessComponentBuilderGenerator : IIncrementalGenerator
+    internal class KeylessComponentBuilderGenerator : IIncrementalGenerator
     {
         public void Initialize(IncrementalGeneratorInitializationContext context)
         {
