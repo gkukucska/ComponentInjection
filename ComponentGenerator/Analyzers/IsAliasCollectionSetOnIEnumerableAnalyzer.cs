@@ -27,10 +27,7 @@ namespace ComponentGenerator.Analyzers
 
         public override void Initialize(AnalysisContext context)
         {
-            context.RegisterSyntaxNodeAction(
-                AnalyzeSyntax,
-                SyntaxKind.ConstructorDeclaration
-                );
+            context.RegisterSyntaxNodeAction(AnalyzeSyntax, SyntaxKind.ConstructorDeclaration);
         }
 
         private static void AnalyzeSyntax(SyntaxNodeAnalysisContext context)
