@@ -9,7 +9,7 @@ using System.Linq;
 namespace ComponentGenerator.Analyzers
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class IsAliasCollectionSetOnIEnumerableAnalyzer: DiagnosticAnalyzer
+    internal class IsAliasCollectionSetOnIEnumerableAnalyzer: DiagnosticAnalyzer
     {
         internal const string DiagnosticId = "COMP001";
 

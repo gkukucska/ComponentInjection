@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace ComponentGenerator.ComponentBuilder
 {
     [Generator]
-    public class ComponentBuilderGenerator : IIncrementalGenerator
+    internal class ComponentBuilderGenerator : IIncrementalGenerator
     {
         public void Initialize(IncrementalGeneratorInitializationContext context)
         {

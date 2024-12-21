@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace ComponentGenerator.CodeFixes
 {
     [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(IsAliasCollectionSetOnIEnumerableCodeFix)), Shared]
-    public class IsAliasCollectionSetOnIEnumerableCodeFix:CodeFixProvider
+    internal class IsAliasCollectionSetOnIEnumerableCodeFix:CodeFixProvider
     {
 
         public override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(IsAliasCollectionSetOnIEnumerableAnalyzer.DiagnosticId);

@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace ComponentGenerator.ServiceBuilder
 {
     [Generator]
-    public class ServiceBuilderGenerator : IIncrementalGenerator
+    internal class ServiceBuilderGenerator : IIncrementalGenerator
     {
         public void Initialize(IncrementalGeneratorInitializationContext context)
         {
