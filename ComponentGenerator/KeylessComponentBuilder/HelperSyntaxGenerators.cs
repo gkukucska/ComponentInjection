@@ -14,7 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace ComponentGenerator 
 {{
     [AttributeUsage(AttributeTargets.Class,AllowMultiple = false,Inherited = true)]
-    internal class KeylessComponentAttribute: Attribute 
+    internal class KeylessComponentAttribute: ComponentAttributeBase 
     {{
         private readonly Type _optionType;
         private readonly ServiceLifetime _lifetime;

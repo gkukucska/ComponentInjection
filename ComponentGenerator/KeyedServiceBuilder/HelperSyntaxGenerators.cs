@@ -13,7 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace ComponentGenerator 
 {{
     [AttributeUsage(AttributeTargets.Class,AllowMultiple = false,Inherited = true)]
-    internal class KeyedServiceAttribute: Attribute 
+    internal class KeyedServiceAttribute: ComponentAttributeBase 
     {{
         private readonly string _serviceKey;
         private readonly ServiceLifetime _lifetime;
