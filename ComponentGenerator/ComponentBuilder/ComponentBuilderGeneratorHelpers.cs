@@ -11,6 +11,8 @@ namespace ComponentGenerator.ComponentBuilder
 
     internal static class ComponentBuilderGeneratorHelpers
     {
+        private static ComponentModel _lastModel;
+        private static KeyValuePair<string, string> _lastAction;
 
         internal static void GenerateComponentBuilderSyntax(SourceProductionContext context, ComponentModel model)
         {
@@ -18,8 +20,9 @@ namespace ComponentGenerator.ComponentBuilder
             {
                 return;
             }
-
-            var builderExtensionSyntax = $@"//compiler generated
+            if (_lastModel != model)
+            {
+                var builderExtensionSyntax = $@"//compiler generated
 #nullable disable
 using System.Linq;
 using System.CodeDom.Compiler;
@@ -70,7 +73,11 @@ namespace ComponentBuilderExtensions
     }}
 }}
             ";
-            context.AddSource($"{Helpers.ToSnakeCase(model.ClassName)}_BuilderExtensions.g.cs", builderExtensionSyntax);
+
+                _lastAction = new KeyValuePair<string, string>($"{Helpers.ToSnakeCase(model.ClassName)}_BuilderExtensions.g.cs", builderExtensionSyntax);
+                _lastModel = model;
+            }
+            context.AddSource(_lastAction.Key, _lastAction.Value);
         }
 
         private static string GenerateProxyFactoryRegistrationSyntax(ComponentModel model)
@@ -179,7 +186,7 @@ namespace {optionNamespace}
 
         internal static string GenerateAliasProperties(ComponentModel model)
         {
-            var builder=new StringBuilder();
+            var builder = new StringBuilder();
             foreach (var parameter in model.Constructor.Parameters.OfType<AliasParameterModel>())
             {
                 builder.AppendLine($@"        public string {Helpers.CapitalizeFirstLetter(parameter.Name)} {{ get; set; }}");

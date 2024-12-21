@@ -11,6 +11,8 @@ namespace ComponentGenerator.KeylessComponentBuilder
 
     internal static class KeylessComponentBuilderGeneratorHelpers
     {
+        private static KeylessComponentModel _lastModel;
+        private static KeyValuePair<string, string> _lastAction;
 
         internal static void GenerateKeylessComponentBuilderSyntax(SourceProductionContext context, KeylessComponentModel model)
         {
@@ -19,7 +21,11 @@ namespace ComponentGenerator.KeylessComponentBuilder
                 return;
             }
 
-            var builderExtensionSyntax = $@"//compiler generated
+            if (_lastModel != model)
+            {
+
+
+                var builderExtensionSyntax = $@"//compiler generated
 #nullable disable
 using System.Linq;
 using System.CodeDom.Compiler;
@@ -70,7 +76,11 @@ namespace ComponentBuilderExtensions
     }}
 }}
             ";
-            context.AddSource($"{Helpers.ToSnakeCase(model.ClassName)}_BuilderExtensions.g.cs", builderExtensionSyntax);
+
+                _lastAction = new KeyValuePair<string, string>($"{Helpers.ToSnakeCase(model.ClassName)}_BuilderExtensions.g.cs", builderExtensionSyntax);
+                _lastModel = model;
+            }
+            context.AddSource(_lastAction.Key, _lastAction.Value);
         }
 
         private static string GenerateProxyFactoryRegistrationSyntax(ComponentModel model)
