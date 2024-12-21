@@ -14,7 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace ComponentGenerator 
 {{
     [AttributeUsage(AttributeTargets.Class,AllowMultiple = false,Inherited = true)]
-    internal class ComponentAttribute: Attribute 
+    internal class ComponentAttribute: ComponentAttributeBase 
     {{
         private readonly Type _optionType;
         private readonly ServiceLifetime _lifetime;
@@ -40,6 +40,11 @@ namespace ComponentGenerator
     
     [AttributeUsage(AttributeTargets.Parameter,AllowMultiple = false,Inherited = true)]
     internal class OptionalAttribute: Attribute
+    {{
+    }}
+    
+    [AttributeUsage(AttributeTargets.Class,AllowMultiple = false,Inherited = true)]
+    internal abstract class ComponentAttributeBase: Attribute
     {{
     }}
 
