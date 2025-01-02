@@ -19,7 +19,10 @@ namespace ComponentGenerator.ComponentBuilder
                 return null;
             }
 
-            var componentAttributeSymbol = context.Attributes.First();
+            var componentAttributeSymbol = context.Attributes.FirstOrDefault(x=>x.AttributeClass.Name == "ComponentAttribute");
+            
+            if (componentAttributeSymbol is null)
+                return null;
 
             var optionType = componentAttributeSymbol.ConstructorArguments[0].Value.ToString();
             var lifetime = componentAttributeSymbol.ConstructorArguments[1].Value.ToString();

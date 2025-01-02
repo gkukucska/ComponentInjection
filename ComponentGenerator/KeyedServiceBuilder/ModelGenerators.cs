@@ -14,7 +14,10 @@ namespace ComponentGenerator.KeyedServiceBuilder
                 return null;
             }
 
-            var serviceAttributeSymbol = context.Attributes.First();
+            var serviceAttributeSymbol = context.Attributes.FirstOrDefault(x=>x.AttributeClass.Name == "KeyedServiceAttribute");
+            
+            if (serviceAttributeSymbol is null)
+                return null;
 
             var serviceKey = serviceAttributeSymbol.ConstructorArguments[0].Value.ToString();
             var lifetime = serviceAttributeSymbol.ConstructorArguments[1].Value.ToString();
