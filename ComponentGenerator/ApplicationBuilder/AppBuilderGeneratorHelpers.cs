@@ -39,6 +39,7 @@ namespace {model.ApplicationNamespace}
 {GenerateKeyedServiceInstallationSyntax(model)}
 {GenerateComponentInstallationSyntax(model)}
 {GenerateKeylessComponentInstallationSyntax(model)}
+{GenerateHostedServiceInstallationSyntax(model)}
 
             return builder;
 
@@ -75,5 +76,11 @@ namespace {model.ApplicationNamespace}
     {
         return string.Join(string.Empty, model.ReferencedKeylessComponents.Select(x => $@"
             builder.InstallAsKeylessComponent_{Helpers.ToSnakeCase(x)}();"));
+    }
+
+    internal static string GenerateHostedServiceInstallationSyntax(ApplicationModel model)
+    {
+        return string.Join(string.Empty, model.HostedServices.Select(x => $@"
+            builder.InstallAsHostedService_{Helpers.ToSnakeCase(x)}();"));
     }
 }

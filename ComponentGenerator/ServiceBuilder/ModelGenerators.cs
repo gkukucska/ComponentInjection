@@ -14,7 +14,10 @@ namespace ComponentGenerator.ServiceBuilder
                 return null;
             }
 
-            var serviceAttributeSymbol = context.Attributes.First();
+            var serviceAttributeSymbol = context.Attributes.FirstOrDefault(x=>x.AttributeClass.Name == "ServiceAttribute");
+            
+            if (serviceAttributeSymbol is null)
+                return null;
 
             var lifetime = serviceAttributeSymbol.ConstructorArguments[0].Value.ToString();
             var interfaceCollection = serviceAttributeSymbol.ConstructorArguments[1].Values.Select(x => x.Value.ToString()).ToList();
