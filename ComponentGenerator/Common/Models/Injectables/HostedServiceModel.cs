@@ -2,22 +2,22 @@
 
 namespace ComponentGenerator.Common.Models.Injectables
 {
-
-    internal class ComponentModel : InjectableModelBase
+    internal class HostedServiceModel
     {
+        public string ClassName { get; }
+        public ConstructorModel Constructor { get; }
         public string OptionType { get; }
 
-        public ConstructorModel Constructor { get; }
-
-        public ComponentModel(string className, ConstructorModel constructor, List<string> implementationCollection, string lifetime, string optionType) : base(className, implementationCollection, lifetime)
+        public HostedServiceModel(string className, ConstructorModel constructor, string optionType)
         {
-            OptionType = optionType;
+            ClassName = className;
             Constructor = constructor;
+            OptionType = optionType;
         }
 
         public override bool Equals(object obj)
         {
-            return obj is ComponentModel model &&
+            return obj is HostedServiceModel model &&
                    OptionType == model.OptionType &&
                    EqualityComparer<ConstructorModel>.Default.Equals(Constructor, model.Constructor);
         }
@@ -30,12 +30,12 @@ namespace ComponentGenerator.Common.Models.Injectables
             return hashCode;
         }
 
-        public static bool operator ==(ComponentModel left, ComponentModel right)
+        public static bool operator ==(HostedServiceModel left, HostedServiceModel right)
         {
-            return EqualityComparer<ComponentModel>.Default.Equals(left, right);
+            return EqualityComparer<HostedServiceModel>.Default.Equals(left, right);
         }
 
-        public static bool operator !=(ComponentModel left, ComponentModel right)
+        public static bool operator !=(HostedServiceModel left, HostedServiceModel right)
         {
             return !(left == right);
         }

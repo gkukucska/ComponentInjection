@@ -11,7 +11,6 @@ namespace SimpleApplication
         static void Main(string[] args)
         {
             var builder = Host.CreateApplicationBuilder();
-            builder.Services.AddHostedService<MyHostedService>();
             builder.Configuration.AddJsonFile("app.json");
             builder.InstallAliases();
             Console.WriteLine("Hello, World!");
@@ -20,13 +19,13 @@ namespace SimpleApplication
 			app.Start();
         }
     }
-
-
+    
+    [HostedService(typeof(MyHostedServiceOptions))]
     internal class MyHostedService : IHostedService
     {
         private readonly SimpleComponent.IMyComponent _myComponent;
 
-        public MyHostedService([FromKeyedServices("MyComponentAlias")] SimpleComponent.IMyComponent myComponent)
+        public MyHostedService([Alias] SimpleComponent.IMyComponent myComponent)
         {
             _myComponent = myComponent;
         }
@@ -39,5 +38,9 @@ namespace SimpleApplication
         {
             return Task.CompletedTask;
         }
+    }
+
+    internal partial class MyHostedServiceOptions
+    {
     }
 }

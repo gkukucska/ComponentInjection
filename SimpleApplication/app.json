@@ -1,25 +1,17 @@
 {
   "Components": {
-    "MyComponentAlias": "MyComponent",
-    "MySecondComponentAlias": "MyComponent",
-    "MyOtherComponentAlias": "MyOtherComponent"
+    "MyComponentAlias": "SimpleComponent.MyComponent",
+    "MySecondComponentAlias": "SimpleComponent.MyComponent",
+    "MyOtherComponentAlias": "SimpleComponent.MyOtherComponent"
   },
-  "MyHostedService": {
-    "MyComponent": {
-      "Key": "MyComponentAlias"
-    }
+  "SimpleApplication.MyHostedService": {
+    "MyComponent":  "MyComponentAlias"
   },
   "MyComponentAlias": {
-    "Id": "MyHostedServiceAlias",
-    "OtherComponent": {
-      "Key": "MyOtherComponentAlias"
-    }
+    "Id": "MyComponentAlias",
+    "OtherComponent": "MyOtherComponentAlias"
   },
-  "MySecondComponentAlias": {
-    "Id": "MyHostedServiceAlias",
-    "OtherComponent": {
-      "Key": "MyOtherComponentAlias"
-    }
-
+  "MyOtherComponentAlias": {
+    "Id": "MyHostedServiceAlias"
   }
 }
