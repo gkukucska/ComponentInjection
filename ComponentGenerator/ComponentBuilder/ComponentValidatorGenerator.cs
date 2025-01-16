@@ -8,7 +8,6 @@ namespace ComponentGenerator.ComponentBuilder
     {
         public void Initialize(IncrementalGeneratorInitializationContext context)
         {
-            context.RegisterPostInitializationOutput(ComponentValidatorGeneratorHelpers.GenerateHelperSyntax);
             var componentProvider = context.SyntaxProvider.ForAttributeWithMetadataName("ComponentGenerator.ComponentAttribute", 
                 predicate: (node, _) => node is ClassDeclarationSyntax,
                 transform: ModelGenerators.GenerateModel);
