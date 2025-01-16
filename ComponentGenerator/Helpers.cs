@@ -150,5 +150,55 @@ namespace {optionNamespace}
 
             return builder.ToString();
         }
+
+        internal static string GenerateConstructorValidationSyntax(ConstructorModel constructorModel, string className)
+        {
+            var validationSyntax = new StringBuilder();
+            foreach (var parameter in constructorModel.Parameters)
+            {
+                if (parameter is KeyedServiceParameterModel keyedServiceParameterModel)
+                {
+                    validationSyntax.Append($@"
+            builder.FindService<{keyedServiceParameterModel.Type}>(""{keyedServiceParameterModel.ServiceKey}"",errorCollection);");
+                }
+                if (parameter is ServiceParameterModel serviceParameterModel)
+                {
+                    validationSyntax.Append($@"
+            builder.FindService<{serviceParameterModel.Type}>(errorCollection);");
+                }
+                if (parameter is AliasParameterModel aliasParameterModel)
+                {
+                    var aliasParameterName = Helpers.ToSnakeCase(aliasParameterModel.Type);
+                    var aliasOptionName = Helpers.CapitalizeFirstLetter(aliasParameterModel.Name);
+                    validationSyntax.Append($@"
+            var {aliasParameterName}_Alias = configurationSection?.GetValue<string>(""{aliasOptionName}"");
+            if (string.IsNullOrEmpty({aliasParameterName}_Alias))
+            {{
+                errorCollection.AppendLine($""Missing value of {aliasOptionName} from configuration of {className}: {{aliasKey}}"");
+            }}
+            else
+            {{
+                builder.FindService<{aliasParameterModel.Type}>({aliasParameterName}_Alias, errorCollection);
+            }}");
+                }
+                if (parameter is AliasCollectionParameterModel aliasCollectionParameterModel)
+                {
+                    var aliasParameterName = Helpers.ToSnakeCase(aliasCollectionParameterModel.Type);
+                    var aliasOptionName = Helpers.CapitalizeFirstLetter(aliasCollectionParameterModel.Name);
+                    validationSyntax.Append($@"
+            var {aliasParameterName}_AliasCollection = configurationSection?.GetValue<IEnumerable<string>>(""{aliasOptionName}"");
+            if ({aliasParameterName}_Alias == null)
+            {{
+                errorCollection.AppendLine($""Missing value of {aliasOptionName} from configuration of {className}: {{aliasKey}}"");
+            }}
+            foreach(var alias in {aliasParameterName}_AliasCollection)
+            {{
+                builder.FindService<{aliasCollectionParameterModel.Type}>(alias, errorCollection);
+            }}");
+                }
+            }
+            return validationSyntax.ToString();
+        }
+
     }
 }
