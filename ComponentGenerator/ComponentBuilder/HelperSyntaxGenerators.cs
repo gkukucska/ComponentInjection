@@ -27,27 +27,6 @@ namespace ComponentGenerator
             _lifetime = lifetime;
         }}
     }}
-    
-    [AttributeUsage(AttributeTargets.Parameter,AllowMultiple = false,Inherited = true)]
-    internal class AliasAttribute: Attribute
-    {{
-    }}
-    
-    [AttributeUsage(AttributeTargets.Parameter,AllowMultiple = false,Inherited = true)]
-    internal class AliasCollectionAttribute: Attribute
-    {{
-    }}
-    
-    [AttributeUsage(AttributeTargets.Parameter,AllowMultiple = false,Inherited = true)]
-    internal class OptionalAttribute: Attribute
-    {{
-    }}
-    
-    [AttributeUsage(AttributeTargets.Class,AllowMultiple = false,Inherited = true)]
-    internal abstract class ComponentAttributeBase: Attribute
-    {{
-    }}
-
 }}");
         }
     }

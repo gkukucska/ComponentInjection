@@ -1,7 +1,10 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using ComponentBuilderExtensions;
+using Microsoft.Extensions.Hosting;
 using ComponentGenerator;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SimpleComponent;
+using System.ComponentModel;
 
 namespace SimpleApplication
 {
@@ -13,22 +16,27 @@ namespace SimpleApplication
             var builder = Host.CreateApplicationBuilder();
             builder.Configuration.AddJsonFile("app.json");
             builder.InstallAliases();
+            builder.ValidateAliases();
+            builder.Validate();
             Console.WriteLine("Hello, World!");
             var app = builder.Build();
-			
-			app.Start();
+
+            app.Start();
         }
     }
+
+
     
     [HostedService(typeof(MyHostedServiceOptions))]
     internal class MyHostedService : IHostedService
     {
-        private readonly SimpleComponent.IMyComponent _myComponent;
+        private readonly IMyComponent _myComponent;
 
         public MyHostedService([Alias] SimpleComponent.IMyComponent myComponent)
         {
             _myComponent = myComponent;
         }
+
         public Task StartAsync(CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
@@ -43,4 +51,8 @@ namespace SimpleApplication
     internal partial class MyHostedServiceOptions
     {
     }
+}
+
+namespace ComponentGenerator
+{
 }
