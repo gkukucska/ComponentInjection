@@ -174,7 +174,7 @@ namespace {optionNamespace}
             var {aliasParameterName}_Alias = configurationSection?.GetValue<string>(""{aliasOptionName}"");
             if (string.IsNullOrEmpty({aliasParameterName}_Alias))
             {{
-                errorCollection.AppendLine($""Missing value of {aliasOptionName} from configuration of {className}: {{aliasKey}}"");
+                errorCollection.AppendLine($""Missing value of {aliasOptionName} from configuration of {className}"");
             }}
             else
             {{

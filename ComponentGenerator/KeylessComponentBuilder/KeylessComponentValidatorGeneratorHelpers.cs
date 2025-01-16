@@ -32,7 +32,7 @@ namespace ComponentBuilderExtensions
         [CompilerGenerated]
         [ExcludeFromCodeCoverage]
         [GeneratedCode(""{Assembly.GetExecutingAssembly().GetName().Name}"", ""{Assembly.GetExecutingAssembly().GetName().Version}"")]
-        public static void Validate_{Helpers.ToSnakeCase(model.ClassName)}(IHostApplicationBuilder builder, string aliasKey, StringBuilder errorCollection)
+        public static void Validate_{Helpers.ToSnakeCase(model.ClassName)}(this IHostApplicationBuilder builder, StringBuilder errorCollection)
         {{
             var configurationSection = builder.Configuration.GetSection(""{model.ClassName}"");
 {Helpers.GenerateConstructorValidationSyntax(model.Constructor,model.ClassName)}

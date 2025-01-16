@@ -17,15 +17,15 @@ internal static class AppBuilderGeneratorHelpers
         var builderExtensionSyntax = $@"//compiler generated
 #nullable disable
 using System.CodeDom.Compiler;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Configuration;
 using ComponentBuilderExtensions;
+using Microsoft.Extensions.Hosting;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
+using Microsoft.Extensions.Configuration;
 
 namespace {model.ApplicationNamespace}
 {{
-    internal static class BuilderExtensions
+    internal static partial class BuilderExtensions
     {{
         [CompilerGenerated]
         [ExcludeFromCodeCoverage]
@@ -48,7 +48,7 @@ namespace {model.ApplicationNamespace}
     }}
 }}
 ";
-        context.AddSource("ComponentBuilderExtensions.g.cs", builderExtensionSyntax);
+        context.AddSource("ApplicationBuilderExtensions.g.cs", builderExtensionSyntax);
     }
 
     private static string GenerateServiceInstallationSyntax(ApplicationModel model)

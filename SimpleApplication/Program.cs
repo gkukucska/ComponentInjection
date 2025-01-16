@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using ComponentBuilderExtensions;
+using Microsoft.Extensions.Hosting;
 using ComponentGenerator;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +16,7 @@ namespace SimpleApplication
             var builder = Host.CreateApplicationBuilder();
             builder.Configuration.AddJsonFile("app.json");
             builder.InstallAliases();
+            builder.ValidateAliases();
             builder.Validate();
             Console.WriteLine("Hello, World!");
             var app = builder.Build();
