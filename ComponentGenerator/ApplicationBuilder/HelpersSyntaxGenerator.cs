@@ -26,7 +26,7 @@ namespace ComponentGenerator
     {{
         private readonly string _componentSection;
 
-        public ApplicationAttribute(string componentSection)
+        public ApplicationAttribute(string componentSection = ""Components"")
         {{
             _componentSection = componentSection;   
         }}
