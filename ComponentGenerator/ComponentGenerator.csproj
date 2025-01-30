@@ -18,7 +18,6 @@
         <Owners>Gergo, Kukucska</Owners>
         <Authors>Gergo, Kukucska</Authors>
         <Description>Component injection source generators designed to reduce boilerplate and adding more flexibility to Microsoft's DI system</Description>
-        <PackageOutputPath>$(SolutionDir)/LocalPackages</PackageOutputPath>
         <IncludeBuildOutput>false</IncludeBuildOutput>
         <IncludeBuiltProjectOutputGroup>false</IncludeBuiltProjectOutputGroup>
         <targetframeworks>netstandard2.0;netstandard2.1;net6.0;net7.0;net8.0;net462</targetframeworks>
