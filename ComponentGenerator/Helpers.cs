@@ -156,17 +156,17 @@ namespace {optionNamespace}
             var validationSyntax = new StringBuilder();
             foreach (var parameter in constructorModel.Parameters)
             {
-                if (parameter is KeyedServiceParameterModel keyedServiceParameterModel)
+                if (parameter is KeyedServiceParameterModel keyedServiceParameterModel && !keyedServiceParameterModel.IsOptional)
                 {
                     validationSyntax.Append($@"
             builder.FindService<{keyedServiceParameterModel.Type}>(""{keyedServiceParameterModel.ServiceKey}"",errorCollection);");
                 }
-                if (parameter is ServiceParameterModel serviceParameterModel)
+                if (parameter is ServiceParameterModel serviceParameterModel && !serviceParameterModel.IsOptional)
                 {
                     validationSyntax.Append($@"
             builder.FindService<{serviceParameterModel.Type}>(errorCollection);");
                 }
-                if (parameter is AliasParameterModel aliasParameterModel)
+                if (parameter is AliasParameterModel aliasParameterModel && !aliasParameterModel.IsOptional)
                 {
                     var aliasParameterName = Helpers.ToSnakeCase(aliasParameterModel.Type);
                     var aliasOptionName = Helpers.CapitalizeFirstLetter(aliasParameterModel.Name);
@@ -181,7 +181,7 @@ namespace {optionNamespace}
                 builder.FindService<{aliasParameterModel.Type}>({aliasParameterName}_Alias, errorCollection);
             }}");
                 }
-                if (parameter is AliasCollectionParameterModel aliasCollectionParameterModel)
+                if (parameter is AliasCollectionParameterModel aliasCollectionParameterModel && !aliasCollectionParameterModel.IsOptional)
                 {
                     var aliasParameterName = Helpers.ToSnakeCase(aliasCollectionParameterModel.Type);
                     var aliasOptionName = Helpers.CapitalizeFirstLetter(aliasCollectionParameterModel.Name);
