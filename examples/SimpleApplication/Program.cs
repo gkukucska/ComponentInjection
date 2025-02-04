@@ -16,7 +16,7 @@ namespace SimpleApplication
             var builder = Host.CreateApplicationBuilder();
             builder.Configuration.AddJsonFile("app.json");
             builder.InstallComponents();
-            builder.ValidateAliases();
+            builder.ValidateComponents();
             Console.WriteLine("Hello, World!");
             var app = builder.Build();
 
