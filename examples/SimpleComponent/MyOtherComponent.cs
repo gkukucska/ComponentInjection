@@ -1,5 +1,6 @@
 ﻿using ComponentGenerator;
 using Microsoft.Extensions.DependencyInjection;
+using SimpleComponent.Interfaces;
 
 namespace SimpleComponent
 {

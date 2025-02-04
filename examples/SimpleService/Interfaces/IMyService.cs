@@ -1,4 +1,4 @@
-﻿namespace SimpleService
+﻿namespace SimpleService.Interfaces
 {
     public interface IMyService
     {

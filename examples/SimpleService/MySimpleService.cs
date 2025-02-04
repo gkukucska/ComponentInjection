@@ -1,5 +1,6 @@
 ﻿using ComponentGenerator;
 using Microsoft.Extensions.DependencyInjection;
+using SimpleService.Interfaces;
 
 namespace SimpleService
 {

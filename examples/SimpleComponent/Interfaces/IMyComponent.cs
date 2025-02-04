@@ -1,4 +1,4 @@
-﻿namespace SimpleComponent
+﻿namespace SimpleComponent.Interfaces
 {
     public interface IMyComponent
     {
