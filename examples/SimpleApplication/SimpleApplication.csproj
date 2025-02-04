@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ComponentGenerator\ComponentGenerator.csproj" OutputItemType="Analyzer" />
+    <ProjectReference Include="$(SolutionDir)\source\ComponentGenerator\ComponentGenerator.csproj" OutputItemType="Analyzer"/>
     <ProjectReference Include="..\SimpleComponent\SimpleComponent.csproj" />
     <ProjectReference Include="..\SimpleService\SimpleService.csproj" />
   </ItemGroup>

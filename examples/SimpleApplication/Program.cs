@@ -16,7 +16,7 @@ namespace SimpleApplication
             var builder = Host.CreateApplicationBuilder();
             builder.Configuration.AddJsonFile("app.json");
             builder.InstallComponents();
-            builder.Validate();
+            builder.ValidateAliases();
             Console.WriteLine("Hello, World!");
             var app = builder.Build();
 
@@ -24,28 +24,6 @@ namespace SimpleApplication
         }
     }
 
-
-    
-    [HostedService(typeof(MyHostedServiceOptions))]
-    internal class MyHostedService : IHostedService
-    {
-        private readonly IMyComponent _myComponent;
-
-        public MyHostedService([Alias] SimpleComponent.IMyComponent myComponent)
-        {
-            _myComponent = myComponent;
-        }
-
-        public Task StartAsync(CancellationToken cancellationToken)
-        {
-            return Task.CompletedTask;
-        }
-
-        public Task StopAsync(CancellationToken cancellationToken)
-        {
-            return Task.CompletedTask;
-        }
-    }
 
     internal partial class MyHostedServiceOptions
     {

@@ -1,6 +1,7 @@
 ﻿using ComponentGenerator;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using SimpleComponent.Interfaces;
 
 namespace SimpleComponent
 {
@@ -19,8 +20,4 @@ namespace SimpleComponent
             _optionalLogger = optionalLogger;
         }
     }
-}
-
-namespace ComponentGenerator
-{
 }
