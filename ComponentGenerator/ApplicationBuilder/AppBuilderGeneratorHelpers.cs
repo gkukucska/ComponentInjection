@@ -30,7 +30,7 @@ namespace {model.ApplicationNamespace}
         [CompilerGenerated]
         [ExcludeFromCodeCoverage]
         [GeneratedCode(""{Assembly.GetExecutingAssembly().GetName().Name}"", ""{Assembly.GetExecutingAssembly().GetName().Version}"")]
-        internal static IHostApplicationBuilder InstallAliases(this IHostApplicationBuilder builder)
+        internal static IHostApplicationBuilder InstallComponents(this IHostApplicationBuilder builder)
         {{
             var aliases = builder.Configuration.GetRequiredSection(""{model.ComponentSection}"")
                                                .AsEnumerable();
