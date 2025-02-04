@@ -23,13 +23,4 @@ namespace SimpleApplication
             app.Start();
         }
     }
-
-
-    internal partial class MyHostedServiceOptions
-    {
-    }
-}
-
-namespace ComponentGenerator
-{
 }
